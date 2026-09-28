@@ -587,6 +587,69 @@ h4,.label{font-size:14px;font-weight:700;color:var(--ink-2)}
 .pricetag b{color:var(--ink)}
 .chip:nth-child(3n+1){background:var(--tint-blue)} .chip:nth-child(3n+2){background:var(--tint-orange)} .chip:nth-child(3n){background:var(--tint-green)}
 .unitshint{font-size:14px;color:var(--ink-orange);margin:0}
+
+/* ---- more orange and blue tints ---- */
+:root{--b1:#F3F8FE; --b2:#E6F0FC; --b3:#D3E4FA; --b4:#B9D3F4; --o1:#FFF6EF; --o2:#FEEBDD; --o3:#FCD7BE; --o4:#F9BE98;}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--b1:#F3F8FE; --b2:#E6F0FC; --b3:#D3E4FA; --b4:#B9D3F4; --o1:#FFF6EF; --o2:#FEEBDD; --o3:#FCD7BE; --o4:#F9BE98;}}
+:root[data-theme="dark"]{--b1:#F3F8FE; --b2:#E6F0FC; --b3:#D3E4FA; --b4:#B9D3F4; --o1:#FFF6EF; --o2:#FEEBDD; --o3:#FCD7BE; --o4:#F9BE98;}
+.site{border-top:0;position:relative}
+.site::before{content:"";display:block;height:5px;background:linear-gradient(90deg,var(--accent) 0 50%,var(--ink-blue) 50% 100%)}
+.nav.brushed{background:var(--surface)}
+.navlinks button.on{background:var(--b2);color:var(--ink-blue)}
+.navlinks button:hover{background:var(--b1)}
+.hero.brushed{background-color:var(--b2)}
+.hero .plate-label{display:inline-block;background:var(--o2);color:var(--ink-orange);padding:6px 12px;border-radius:999px;align-self:flex-start}
+.facts div:nth-child(1){background:var(--surface)}
+.facts div:nth-child(2){background:var(--o2)}
+.facts div:nth-child(3){background:var(--b3)}
+.facts div:nth-child(1) b{color:var(--ink-blue)} .facts div:nth-child(3) b{color:var(--ink-blue)}
+.sheet{border-color:var(--b3)}
+.sheet-view{background-color:var(--b1)}
+.pricetag{background:var(--o1)}
+.pricetag b{color:var(--ink-orange)}
+.dropbig.herodrop{background:var(--o1);border-color:var(--o4)}
+.dropbig.herodrop:hover,.dropbig.herodrop.over{background:var(--o2);border-color:var(--accent)}
+.dropbig.herodrop b{color:var(--ink-orange)}
+.filetypes span{background:var(--surface);border-color:var(--o3);color:var(--ink-orange)}
+#examples{background:var(--b1)}
+.ex .body{background:var(--surface)}
+.ex:nth-child(2) .body{background:var(--o1)}
+.ladder td:nth-child(3){color:var(--ink-orange)}
+.ex .try{color:var(--ink-blue)}
+#how{background:var(--surface)}
+.steps4 > div:nth-child(1){background:var(--b2)}
+.steps4 > div:nth-child(2){background:var(--o2)}
+.steps4 > div:nth-child(3){background:var(--b3)}
+.steps4 > div:nth-child(3) .n{color:var(--ink-blue)}
+.foot.brushed{background:#1D3A66}
+.foot .plate-label{color:var(--o4)}
+.appbar{background:var(--b1)}
+.dots i{background:var(--surface)}
+.dots li.now i{background:var(--accent);border-color:var(--o3);box-shadow:0 0 0 4px var(--o2);color:#fff}
+.dots li.done i{background:var(--ink-blue);color:#fff}
+.wiz-panel h3{color:var(--ink-blue)}
+.mat:hover{background:var(--b1);border-color:var(--b4)}
+.opt:hover{background:var(--b1)}
+.pricebox{background:var(--surface);border-color:var(--b3)}
+.bigprice{background:var(--o1);border-radius:14px;padding:12px 8px}
+.bigprice b{color:var(--ink-orange)}
+.ladder2{background:var(--b1)}
+.qtyrow2 button{background:var(--b2);color:var(--ink-blue)}
+.subtotal b{color:var(--ink-blue)}
+.actbar{background:var(--b1);border-top-color:var(--b3)}
+.actsum b{color:var(--ink-orange)}
+.btn.ghost{background:var(--surface);border-color:var(--b4);color:var(--ink-blue)}
+.btn.ghost:hover{background:var(--b2)}
+.upl{background:var(--b1);border-color:var(--b4)}
+.upl h2{color:var(--ink-blue)}
+.fileicons span:nth-child(odd){background:var(--o1);border-color:var(--o3);color:var(--ink-orange)}
+.fileicons span:nth-child(even){background:var(--b2);border-color:var(--b4);color:var(--ink-blue)}
+.chip:nth-child(odd){background:var(--o2)} .chip:nth-child(even){background:var(--b2)}
+.chip:nth-child(3n){background:var(--b3)}
+.card.sunk,.paysum{background:transparent}
+.seg button[aria-pressed="true"]{background:var(--ink-blue)}
+.tabs button[aria-selected="true"]{color:var(--ink-blue)}
+.stat:nth-child(odd){background:var(--b1)} .stat:nth-child(even){background:var(--o1)}
 </style>
 
 <div class="wrap">
