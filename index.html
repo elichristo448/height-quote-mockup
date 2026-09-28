@@ -710,6 +710,20 @@ h4,.label{font-size:14px;font-weight:700;color:var(--ink-2)}
 .mockchip{background:var(--btint);color:var(--blue)}
 .unitshint{color:var(--orange)}
 .foot .plate-label{color:var(--orange)}
+
+/* ---- selected things get their own, deeper blue ---- */
+:root{--bsel:#CFE2FA;}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bsel:#CFE2FA;}}
+:root[data-theme="dark"]{--bsel:#CFE2FA;}
+.ladder2 tr.cur td{background:var(--bsel);color:var(--ink);font-weight:800}
+.ladder2 tr.cur td:nth-child(2){color:var(--orange)}
+.ladder2 tr:hover:not(.cur) td{background:#DDEAFB}
+.mat[aria-pressed="true"],.opt:has(input:checked){background:var(--bsel);border-color:var(--orange)}
+.mat:hover:not([aria-pressed="true"]),.opt:hover:not(:has(input:checked)){background:var(--btint)}
+.navlinks button.on{background:var(--bsel)}
+.seg button[aria-pressed="true"]{background:var(--blue)}
+.q tr.sel td{background:var(--bsel)}
+.statebtns button[aria-pressed="true"]{background:var(--blue);color:#fff}
 </style>
 
 <div class="wrap">
@@ -797,7 +811,7 @@ function loadSamples(){
   };
   for (const [k, d] of Object.entries(defs)){ const t = parseSTL(b64ToBuf(PARTS_B64[d.key])); SAMPLES[k] = partFromTris(t, Object.assign({id:k, units:'in', unitsKnown:true}, d)); }
   const p = SAMPLES.plate;
-  SAMPLES.forged = Object.assign({}, p, {id:'forged', file:'mounting-plate-edited.step', title:'Mounting plate (tampered)', blurb:'Demo: numbers changed before sending', sentVol:2.10, forged:true});
+  SAMPLES.forged = Object.assign({}, p, {id:'forged', file:'mounting-plate-edited.step', title:'Mounting plate (tampered)', blurb:'Demo: numbers changed before sending', vol:2.10, sentVol:2.10, trueVol:p.vol, forged:true});
   SAMPLES.dxf = {id:'dxf', file:'flat-pattern.dxf', title:'Flat pattern', dxf:true, material:'al6061', blurb:'2D drawing, always quoted by the team'};
 }
 
@@ -864,7 +878,7 @@ function evaluate(){
   if (S.country !== 'US') r.push('Instant orders ship to US addresses only.');
   if (S.qty > S.maxQty) r.push('Orders over ' + S.maxQty + ' pieces are quoted by our team.');
   let pr = null;
-  if (!p.dxf){ pr = priceAt(p, S.material, S.qty, S.lead); if (pr.total > S.cap) r.push('Orders over ' + money(S.cap) + ' are quoted by our team.'); }
+  if (!p.dxf){ pr = priceAt(p, S.material, S.qty, S.lead); if (pr.total > S.cap) r.push('Orders over $' + S.cap.toLocaleString() + ' are quoted by our team.'); }
   const open = S.orders.filter(o => o.status === 'review').length;
   if (open >= S.openCap && !r.length) r.push('Our review queue is full, so our team will quote this instead.');
   return {instant: !r.length, reasons: r, pr};
@@ -1203,7 +1217,7 @@ function configure(){
   } else {
     const pr = ev.pr;
     const ladder = p.dxf ? '' : [5, 10, 25, 50].map(q => { const x = priceAt(p, S.material, q, S.lead); const inst = q <= S.maxQty && x.total <= S.cap;
-      return `<tr class="${q === S.qty ? 'cur' : ''}" data-q="${q}"><td>${q} =</td><td>${money(x.unit)}/ea</td><td class="hint">${inst ? '' : 'team'}</td></tr>`; }).join('');
+      return `<tr class="${q === S.qty ? 'cur' : ''}" data-q="${q}"><td>${q} =</td><td>${money(x.unit)}/ea</td><td class="hint">${inst ? '' : "we'll quote"}</td></tr>`; }).join('');
     panel = `<div class="pricebox">
         <div class="qtyrow2"><button id="qMinus" aria-label="Fewer">−</button><input id="qty" type="text" inputmode="numeric" value="${S.qty}" aria-label="Quantity"><button id="qPlus" aria-label="More">+</button></div>
         ${pr ? `<div class="bigprice"><b>${money(pr.unit)}</b><span>/ea</span></div>
@@ -1362,7 +1376,7 @@ function bindBuyer(){
     const qp = $('#qPlus'); if (qp) qp.onclick = () => setQ(S.qty + 1);
     const qi = $('#qty'); if (qi) qi.onchange = () => setQ(parseInt(qi.value, 10));
     const d = $('#details'); if (d) d.onclick = () => { S.detailsOpen = !S.detailsOpen; render(); };
-    const tp = $('#toPay'); if (tp) tp.onclick = () => { S.snap = buyerViewer.snapshot(); S.payState = 'idle'; S.terms = false; S.hold = 900; go('pay'); startHold(); };
+    const tp = $('#toPay'); if (tp) tp.onclick = () => { S.snap = buyerViewer.snapshot(); S.payState = 'idle'; S.hold = 900; go('pay'); startHold(); };
   }
   $$('[data-jump]').forEach(b => b.onclick = () => { const k = +b.dataset.jump; if (k === 0 && (S.part.dxf || !S.part.unitsAsk)){ go('upload'); return; } S.cstep = CSTEPS[k]; go('configure'); });
   const sr = $('#sendReq'); if (sr) sr.onclick = () => { if (S.page === 'configure') S.snap = buyerViewer.snapshot(); sendRequest(); };
@@ -1383,7 +1397,7 @@ function bindBuyer(){
 }
 function placeOrder(){
   const t = totals(), p = S.part, id = S.nextOrder++, paidAt = new Date();
-  S.orders.push({id, part:p.title, material:S.material, qty:S.qty, total:t.sub, email:S.email, status:'review', due:addBiz(paidAt, 1), ship:shipDate(S.lead, paidAt), risk:'Low', geo:p, sentVol: p.sentVol != null ? p.sentVol : p.vol, vol:p.vol, holes:p.holes, dims:p.dims, file:p.file, finish:S.finish, lead:S.lead, remeasured:false});
+  S.orders.push({id, part:p.title, material:S.material, qty:S.qty, total:t.sub, email:S.email, status:'review', due:addBiz(paidAt, 1), ship:shipDate(S.lead, paidAt), risk:'Low', geo:p, sentVol: p.sentVol != null ? p.sentVol : p.vol, vol: p.trueVol || p.vol, holes:p.holes, dims:p.dims, file:p.file, finish:S.finish, lead:S.lead, remeasured:false});
   S.log.unshift({t:now(), m:'Order #' + id + ' paid, ' + money(t.sub) + '. Review due ' + fmtDate(addBiz(paidAt, 1)) + '.'});
   go('done');
 }
@@ -1413,7 +1427,7 @@ function queue(){
     return `<tr><td class="num">${h.id}</td><td>${esc(h.part)}<br><span class="hint">${esc(h.reason)}</span></td><td>${act}</td></tr>`; }).join('');
   return `<div class="stack"><div class="stats"><div class="stat"><span class="label">To review</span><b>${open.length}</b></div><div class="stat"><span class="label">Open reviews</span><b>${open.length} / ${S.openCap}</b></div><div class="stat"><span class="label">Hand quotes waiting</span><b>${S.hand.filter(h => !h.sent).length}</b></div><div class="stat"><span class="label">Order limit</span><b>${money(S.cap)}</b></div></div>
     <div class="twocol"><div class="stack"><h3>Instant orders</h3><div class="tablewrap"><table class="q"><thead><tr><th>Order</th><th>Part</th><th>Total</th><th>Status</th><th>Review by</th></tr></thead><tbody>${rows}</tbody></table></div>
-      <button class="btn small ghost" id="overdue" style="align-self:flex-start">Simulate an overdue review</button></div>
+      <button class="btn small ghost" id="overdue" style="align-self:flex-start" ${open.length ? "" : "disabled title=\"No reviews are waiting\""}>${open.length ? "Simulate an overdue review" : "No reviews waiting"}</button></div>
       <div>${reviewPanel()}</div></div>
     <div class="stack"><div class="stack-s"><h3>Quote requests for the team</h3><p class="hint">The system prices each request silently. That practice price stays hidden until your team sends its own, then the gap is logged. Each one counts as a past job for that material.</p></div>
       <div class="tablewrap"><table class="q"><thead><tr><th>Request</th><th>Part</th><th>Your price</th></tr></thead><tbody>${hq}</tbody></table></div></div></div>`;
