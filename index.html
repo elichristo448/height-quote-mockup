@@ -356,6 +356,22 @@ dl{margin:0}
 .subtotal b{font:600 22px/1 var(--mono)}
 .okline{font-size:14px;color:var(--go);margin:0}
 ul.reasons{margin:6px 0 0;padding-left:18px;font-size:14px}
+.upl-page{display:flex;flex-direction:column;gap:18px;max-width:900px;margin:0 auto}
+.upl{border:2px dashed var(--ink);padding:48px 22px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;cursor:pointer}
+.upl:hover,.upl.over{border-color:var(--accent);outline:4px solid var(--accent-soft)}
+.upl h2{font-size:clamp(24px,3.4vw,34px)}
+.upl .or{font:600 12px/1 var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+.fileicons{display:flex;gap:8px}
+.fileicons span{width:44px;height:54px;border:1.5px solid var(--ink);background:var(--surface);display:grid;place-items:end center;padding-bottom:6px;font:600 10px/1 var(--mono);text-transform:uppercase;clip-path:polygon(0 0,72% 0,100% 20%,100% 100%,0 100%)}
+.samples{display:flex;flex-direction:column;gap:10px;align-items:center;text-align:center}
+.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.chip{border:1px solid var(--ink);background:var(--surface);border-radius:999px;padding:7px 14px;font:600 13px/1 var(--display);letter-spacing:.03em}
+.chip:hover{background:var(--sel-soft)}
+.paysum{display:flex;flex-direction:column;gap:16px}
+.paysum img{width:100%;max-width:100%;aspect-ratio:16/10;object-fit:contain;border:1.5px solid var(--ink)}
+.codein{width:140px;border:1px solid var(--ink);border-radius:2px;padding:8px 10px;background:var(--surface)}
+.wiz-panel.enter{animation:panelIn .24s ease-out}
+@keyframes panelIn{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion: reduce){.scan{display:none}*{transition:none!important;animation:none!important}}
 </style>
 
@@ -790,20 +806,20 @@ function home(){
 
 /* upload */
 function uploadPage(){
-  const cards = ['plate', 'bracket', 'housing', 'forged', 'dxf'].map(k => { const p = SAMPLES[k];
-    return `<button class="mat" data-sample="${k}" style="grid-template-columns:1fr"><span><b>${esc(p.title)}</b><small class="mono">${esc(p.file)}</small><small>${esc(p.blurb)}</small></span></button>`; }).join('');
   const onGH = /github\.io$/.test(location.hostname);
-  return `${stepperBar(0)}<div class="page"><div class="twocol">
-    <div class="stack"><h2>Upload your part</h2>
-      <div class="dropbig brushed" id="drop" role="button" tabindex="0" aria-label="Upload a part file" style="min-height:260px">
-        <b>Drop a STEP or STL file here</b><span class="hint">or click to choose one. Up to 20 MB.</span>
-        <div class="filetypes"><span>.STEP</span><span>.STP</span><span>.STL</span><span>.DXF</span></div>
-      </div>
-      ${S.uploadInfo ? `<div class="notice info">${esc(S.uploadInfo)}</div>` : ''}${S.uploadMsg ? `<div class="notice warn">${esc(S.uploadMsg)}</div>` : ''}
-      <p class="hint">Your file is measured in your browser and stored privately. Only our team can open it.${onGH ? ' No file handy? Download a sample: <a href="sample-parts/mounting-plate.stl" download>plate</a> · <a href="sample-parts/angle-bracket.stl" download>bracket</a> · <a href="sample-parts/sensor-housing.stl" download>housing</a>.' : ''}</p>
+  const chips = ['plate', 'bracket', 'housing', 'forged', 'dxf'].map(k => `<button class="chip" data-sample="${k}">${esc(SAMPLES[k].title)}</button>`).join('');
+  return `${stepperBar(0)}<div class="page upl-page">
+    <div class="upl grid-paper" id="drop" role="button" tabindex="0" aria-label="Upload a part file">
+      <div class="fileicons" aria-hidden="true">${['step', 'stp', 'stl', 'dxf'].map(x => `<span>.${x}</span>`).join('')}</div>
+      <h2>Drop your part file here</h2>
+      <span class="or">or</span>
+      <span class="btn">Browse files</span>
+      <p class="hint">Up to 20 MB · one solid part per file · your design stays yours</p>
     </div>
-    <div class="stack"><div class="stack-s"><span class="label">Or try a sample part</span><div class="mats" style="grid-template-columns:1fr">${cards}</div></div></div>
-  </div></div>`;
+    ${S.uploadInfo ? `<div class="notice info">${esc(S.uploadInfo)}</div>` : ''}${S.uploadMsg ? `<div class="notice warn">${esc(S.uploadMsg)}</div>` : ''}
+    <div class="samples"><span class="label">No file handy? Try a sample part</span><div class="chips">${chips}</div>
+      ${onGH ? '<p class="hint">Or download one to drop in: <a href="sample-parts/mounting-plate.stl" download>plate</a> · <a href="sample-parts/angle-bracket.stl" download>bracket</a> · <a href="sample-parts/sensor-housing.stl" download>housing</a></p>' : ''}</div>
+  </div>`;
 }
 const CSTEPS = ['size', 'material', 'options', 'price'];
 function stepperBar(i){
@@ -827,6 +843,7 @@ function stepperBar(i){
 /* configure: one decision per step */
 function configure(){
   const p = S.part, ev = evaluate(), m = MATS[S.material];
+  const enter = S.lastStep !== S.cstep; S.lastStep = S.cstep;
   if (p.dxf && S.cstep === 'size') S.cstep = 'material';
   const idx = CSTEPS.indexOf(S.cstep);
   let panel = '';
@@ -872,7 +889,7 @@ function configure(){
   return `${stepperBar(idx)}<div class="wiz">
     <div class="wiz-view">${p.dxf ? `<div class="viewer grid-paper"><div class="vempty"><div class="stack-s"><h3>2D drawing</h3><p class="mono">${esc(p.file)}</p><p class="hint">Drawings are quoted by our team.</p></div></div></div>` : viewerHTML('bv', p)}
       ${p.dxf ? '' : `<p class="measline mono">${p.dims.map(d => d.toFixed(3)).join(' × ')} in · ${p.vol.toFixed(2)} in³ · ${p.holes} hole${p.holes === 1 ? '' : 's'} · ${(p.vol * m.density).toFixed(2)} lb</p>`}</div>
-    <div class="wiz-panel">${panel}</div>
+    <div class="wiz-panel${enter ? ' enter' : ''}">${panel}</div>
   </div>
   <div class="actbar">${back}${sum}${next}</div>`;
 }
@@ -886,25 +903,30 @@ function partSummary(){
   return `<div class="sumpart">${img ? `<img class="grid-paper" src="${img}" alt="Your part">` : '<span></span>'}<div class="stack-s"><h3>${esc(p.title)}</h3><span class="hint">${esc(MATS[S.material].short)} · ${S.qty} ${S.qty === 1 ? 'part' : 'parts'} · ${esc(FINISHES[S.finish].name)} · ${S.lead === 'rush' ? 'Rush' : 'Standard'}</span>${ev.pr ? `<b class="mono" style="font-size:22px">${money(ev.pr.total)}</b>` : ''}</div></div>`;
 }
 function payPage(){
-  const ev = evaluate(), ready = S.verified && S.attest;
-  const code = !S.codeSent ? '<button class="btn small ghost" id="send">Send code</button>' : (S.verified ? '<span class="pill go">Email verified</span>' : '<div class="row"><input type="text" id="code" inputmode="numeric" maxlength="6" placeholder="6-digit code" style="width:140px;border:1px solid var(--line);border-radius:8px;padding:9px 11px;background:var(--surface)" aria-label="6-digit code"><button class="btn small ghost" id="verify">Verify</button><span class="hint">Sample code: 482913</span></div>');
-  let pay;
-  if (S.payState === 'idle') pay = `<button class="btn block" id="pay" ${ready && S.terms ? '' : 'disabled'}>Pay now</button>`;
-  else if (S.payState === 'working') pay = '<button class="btn block" disabled>Getting your order ready…</button>';
-  else pay = '<button class="btn block" id="toCheckout">Continue to secure checkout →</button>';
-  return `${stepperBar(4)}<div class="page"><div class="twocol">
-    <div class="stack"><div class="card sunk">${partSummary()}</div>
-      <div class="card stack-s"><h3>Before you pay</h3><ul class="terms"><li>This price is fixed for this file, material, quantity, finish and lead time.</li><li>A machinist reviews every order within 1 business day. If we can't make it as priced, we cancel and refund in full.</li><li>If we run late, we tell you and you can cancel free.</li><li>Once your part is in production it can't be cancelled.</li></ul>
-      <p class="hint">Price held for <b class="mono" id="hold">${Math.floor(S.hold / 60)}:${String(S.hold % 60).padStart(2, '0')}</b>. After you click Pay, you have 24 hours to finish checkout.</p></div>
-      <button class="btn ghost small" data-go="configure" style="align-self:flex-start">← Change options</button></div>
-    <div class="card stack">
+
+  const ev = evaluate(), ready = S.verified && S.attest && S.terms, p = S.part, img = S.snap || '';
+  const code = !S.codeSent ? '<button class="btn small ghost" id="send">Send code</button>'
+    : (S.verified ? '<span class="pill go">Email verified</span>'
+    : '<div class="row"><input type="text" id="code" inputmode="numeric" maxlength="6" placeholder="6-digit code" class="codein" aria-label="6-digit code"><button class="btn small ghost" id="verify">Verify</button><span class="hint">Sample code: 482913</span></div>');
+  let cta;
+  if (!ev.instant) cta = '<button class="btn" id="sendReq">Request a quote</button>';
+  else if (S.payState === 'idle') cta = `<button class="btn" id="pay" ${ready ? '' : 'disabled'}>Pay now</button>`;
+  else if (S.payState === 'working') cta = '<button class="btn" disabled>Getting your order ready…</button>';
+  else cta = '<button class="btn" id="toCheckout">Continue to secure checkout →</button>';
+  return `${stepperBar(4)}<div class="wiz">
+    <div class="wiz-view"><div class="paysum">${img ? `<img class="grid-paper" src="${img}" alt="Your part">` : ''}
+      <dl class="kv"><dt>Part</dt><dd>${esc(p.title)}</dd><dt>Material</dt><dd>${esc(MATS[S.material].short)}</dd><dt>Finish</dt><dd>${esc(FINISHES[S.finish].name)}</dd><dt>Quantity</dt><dd>${S.qty}</dd><dt>Ships by</dt><dd>${fmtDate(shipDate(S.lead))}</dd>${ev.pr ? `<dt>Subtotal</dt><dd><b>${money(ev.pr.total)}</b></dd>` : ''}</dl></div></div>
+    <div class="wiz-panel${S.lastStep !== 'pay' ? ' enter' : ''}">
+      <h3>Almost done</h3>
+      ${ev.instant ? '' : `<div class="notice warn">This order no longer qualifies for an instant price: ${esc(ev.reasons[0] || '')}</div>`}
       <div class="field"><label for="email">Email</label><input type="email" id="email" value="${esc(S.email)}"><div class="row">${code}</div></div>
       <div class="field"><label for="country">Ship to</label><select id="country"><option value="US" ${S.country === 'US' ? 'selected' : ''}>United States</option><option value="CA" ${S.country === 'CA' ? 'selected' : ''}>Canada</option></select></div>
-      <label class="check"><input type="checkbox" id="attest" ${S.attest ? 'checked' : ''}><span>This is not a firearm, weapon or export-controlled part, and I am 18 or older buying for business use.</span></label>
-      <label class="check"><input type="checkbox" id="terms" ${S.terms ? 'checked' : ''}><span>I agree to the terms of sale.</span></label>
-      ${ev.instant ? pay : `<div class="notice warn">This order no longer qualifies for an instant price: ${esc(ev.reasons[0] || '')}</div><button class="btn block" id="sendReq">Request a quote instead</button>`}
-      ${ready ? '' : '<p class="hint">Verify your email and tick both boxes to pay.</p>'}
-    </div></div></div>`;
+      <label class="check"><input type="checkbox" id="attest" ${S.attest ? 'checked' : ''}><span>Not a firearm, weapon or export-controlled part. I'm 18 or older, buying for business use.</span></label>
+      <label class="check"><input type="checkbox" id="terms" ${S.terms ? 'checked' : ''}><span>I agree to the terms: fixed price, a machinist reviews within 1 business day, full refund if we can't make it as priced.</span></label>
+      <p class="hint">Price held for <b class="mono" id="hold">${Math.floor(S.hold / 60)}:${String(S.hold % 60).padStart(2, '0')}</b>. After you click Pay, you have 24 hours to finish checkout.</p>
+    </div>
+  </div>
+  <div class="actbar"><button class="btn ghost" data-jump="3">Back</button><span class="actsum">${ev.pr ? `<b>${money(ev.pr.total)}</b> plus tax and shipping` : ''}</span>${cta}</div>`;
 }
 function totals(){ const ev = evaluate(), sub = ev.pr.total, ship = 14, tax = Math.round(sub * 0.0785 * 100) / 100; return {sub, ship, tax, total: sub + ship + tax}; }
 function checkoutPage(){
@@ -937,7 +959,7 @@ function requestedPage(){
 function usePart(p){
   S.part = p; S.material = p.material || 'al6061'; S.finish = 'none'; S.lead = 'standard'; S.qty = p.dxf ? 1 : 10; S.detailsOpen = false;
   S.dec = {tight:false, threads:!!p.threads, drawing:false, own:false}; S.payState = 'idle'; S.terms = false; S.uploadMsg = ''; S.uploadInfo = '';
-  buyerViewer.partId = null; S.scan = !p.dxf && !reduce; S.cstep = p.dxf ? 'material' : 'size';
+  buyerViewer.partId = null; S.scan = !p.dxf && !reduce; S.cstep = p.dxf ? 'material' : 'size'; S.lastStep = null;
   go('configure');
 }
 function takeFile(file){
@@ -988,6 +1010,7 @@ function bindBuyer(){
     if (S.part && !S.part.dxf){ bindViewer('bv', buyerViewer); buyerViewer.setPart(S.part); buyerViewer.setLook(...lookFor());
       if (S.scan){ S.scan = false; const bv = $('#bv'); const sc = document.createElement('div'); sc.className = 'scan'; bv.appendChild(sc); setTimeout(() => sc.remove(), 1200); } }
     $$('[data-mat]').forEach(b => b.onclick = () => { S.material = b.dataset.mat; if (S.finish === 'anodize' && !S.material.startsWith('al')) S.finish = 'none'; S.cstep = 'options'; render(); });
+    $$('[data-mat]').forEach(b => { b.onmouseenter = () => { const mm = MATS[b.dataset.mat]; buyerViewer.setLook(mm.bp, .12, .78); }; b.onmouseleave = () => buyerViewer.setLook(...lookFor()); });
     const nx = document.querySelector('[data-next]'); if (nx) nx.onclick = () => { S.cstep = CSTEPS[Math.min(3, CSTEPS.indexOf(S.cstep) + 1)]; render(); };
     const bk = document.querySelector('[data-back]'); if (bk) bk.onclick = () => { S.cstep = CSTEPS[Math.max(S.part.dxf ? 1 : 0, CSTEPS.indexOf(S.cstep) - 1)]; render(); };
     $$('[data-dec]').forEach(c => c.onchange = () => { S.dec[c.dataset.dec] = c.checked; render(); });
@@ -1006,6 +1029,7 @@ function bindBuyer(){
   $$('[data-jump]').forEach(b => b.onclick = () => { S.cstep = CSTEPS[+b.dataset.jump]; go('configure'); });
   const sr = $('#sendReq'); if (sr) sr.onclick = () => { if (S.page === 'configure') S.snap = buyerViewer.snapshot(); sendRequest(); };
   if (S.page === 'pay'){
+    S.lastStep = 'pay';
     const em = $('#email'); if (em) em.oninput = () => { S.email = em.value; };
     const sd = $('#send'); if (sd) sd.onclick = () => { S.codeSent = true; render(); };
     const vf = $('#verify'); if (vf) vf.onclick = () => { const c = $('#code'); if (c.value.trim() === '482913'){ S.verified = true; render(); } else { c.setCustomValidity('That code does not match. Use the sample code shown.'); c.reportValidity(); } };
@@ -1118,6 +1142,11 @@ function bindShop(){
 }
 
 /* ---------- start ---------- */
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Enter' || S.view !== 'buyer' || S.page !== 'configure') return;
+  const t = document.activeElement; if (t && ['INPUT', 'TEXTAREA', 'SELECT', 'BUTTON', 'A'].includes(t.tagName)) return;
+  const n = document.querySelector('[data-next]'); if (n && !n.disabled){ e.preventDefault(); n.click(); }
+});
 $('#fileIn').onchange = e => { takeFile(e.target.files[0]); e.target.value = ''; };
 $('#vBuyer').onclick = () => { S.view = 'buyer'; render(); };
 $('#vShop').onclick = () => { S.view = 'shop'; render(); };
