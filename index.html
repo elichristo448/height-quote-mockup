@@ -510,6 +510,26 @@ h4,.label{font-size:14px;font-weight:700;color:var(--ink-2)}
 .stat b{font-family:var(--body);font-weight:800}
 .log time{font-family:var(--body)}
 .sumpart img{border-radius:12px;border:1px solid var(--line)}
+
+/* ---- airy white ---- */
+:root{
+  --bg:#FFFFFF; --surface:#FFFFFF; --panel:#F8FAFD; --sunk:#F3F6FA; --ink:#243A66; --ink-2:#3B4E77; --muted:#7784A0; --line:#E5EAF1; --line-2:#F0F3F7;
+  --accent:#F47C3C; --accent-hi:#F68B50; --accent-ink:#FFFFFF; --accent-soft:#FEF1E8; --sel:#243A66; --sel-soft:#F3F7FD;
+  --viewer:#FFFFFF; --gridline:#EEF2F7; --gridmajor:#E6ECF3; --pencil:#F47C3C;
+  --shadow:0 1px 2px rgba(36,58,102,.04),0 8px 28px rgba(36,58,102,.06);
+}
+.site{border:1px solid var(--line-2);box-shadow:var(--shadow)}
+.hero.brushed{background:var(--surface);background-image:none}
+.nav.brushed{border-bottom:1px solid var(--line-2)}
+.brand{color:var(--ink)}
+.facts div{box-shadow:none;border:1px solid var(--line)!important}
+.sheet{box-shadow:none;border:1px solid var(--line)}
+.viewer{border:1px solid var(--line)}
+.steps4 > div{background:var(--panel)}
+.pricebox{box-shadow:none;border:1px solid var(--line)}
+.actbar{box-shadow:none;border-top:1px solid var(--line)}
+.dimlab{box-shadow:none;border-color:#D7E4F1;color:#4F79A8}
+.grid-paper{background-image:radial-gradient(var(--gridmajor) 1px,transparent 1.3px)}
 </style>
 
 <div class="wrap">
@@ -603,11 +623,11 @@ function loadSamples(){
 
 /* ---------- state ---------- */
 const MATS = {
-  al6061:{bp:0xA9C4E2, name:'6061-T6 aluminum', short:'6061 aluminum', desc:'Strong, light, machines clean', lb:3.10, date:'Sep 15', jobs:12, inBand:11, state:'on', factor:1.00, density:0.0975, color:0xC9CED4, metal:.55, rough:.36, sw:'linear-gradient(135deg,#eef1f4 0%,#c3cad2 45%,#f4f6f8 60%,#b7bfc8 100%)'},
-  al7075:{bp:0x9CB6D6, name:'7075-T6 aluminum', short:'7075 aluminum', desc:'Highest strength aluminum', lb:5.40, date:'Sep 15', jobs:7, inBand:6, state:'practice', factor:1.28, density:0.101, color:0xC0C6CD, metal:.55, rough:.34, sw:'linear-gradient(135deg,#e2e6ea 0%,#aeb7c1 45%,#e9ecef 60%,#a3acb6 100%)'},
-  ss304:{bp:0xB7C2CF, name:'304 stainless', short:'304 stainless', desc:'Corrosion resistant, tough', lb:2.90, date:'Sep 12', jobs:4, inBand:3, state:'practice', factor:1.85, density:0.289, color:0xAEB4B9, metal:.7, rough:.28, sw:'linear-gradient(135deg,#d9dde1 0%,#9aa2aa 45%,#e1e4e7 60%,#8e969e 100%)'},
-  st1018:{bp:0x8C9BAE, name:'1018 steel', short:'1018 steel', desc:'Low carbon, weldable', lb:1.10, date:'Sep 12', jobs:11, inBand:10, state:'practice', factor:1.35, density:0.284, color:0x80878D, metal:.6, rough:.45, sw:'linear-gradient(135deg,#a9aeb3 0%,#6e757c 45%,#b3b8bc 60%,#636a70 100%)'},
-  delrin:{bp:0xEEF2F6, name:'Delrin (acetal)', short:'Delrin', desc:'Slippery, stable plastic', lb:6.20, date:'Sep 10', jobs:2, inBand:2, state:'practice', factor:0.90, density:0.051, color:0xEFEDE6, metal:0, rough:.7, sw:'linear-gradient(135deg,#ffffff 0%,#ecebe6 60%,#dedcd4 100%)'}
+  al6061:{bp:0xDCEAF7, name:'6061-T6 aluminum', short:'6061 aluminum', desc:'Strong, light, machines clean', lb:3.10, date:'Sep 15', jobs:12, inBand:11, state:'on', factor:1.00, density:0.0975, color:0xC9CED4, metal:.55, rough:.36, sw:'linear-gradient(135deg,#eef1f4 0%,#c3cad2 45%,#f4f6f8 60%,#b7bfc8 100%)'},
+  al7075:{bp:0xD3E3F3, name:'7075-T6 aluminum', short:'7075 aluminum', desc:'Highest strength aluminum', lb:5.40, date:'Sep 15', jobs:7, inBand:6, state:'practice', factor:1.28, density:0.101, color:0xC0C6CD, metal:.55, rough:.34, sw:'linear-gradient(135deg,#e2e6ea 0%,#aeb7c1 45%,#e9ecef 60%,#a3acb6 100%)'},
+  ss304:{bp:0xDDE3EA, name:'304 stainless', short:'304 stainless', desc:'Corrosion resistant, tough', lb:2.90, date:'Sep 12', jobs:4, inBand:3, state:'practice', factor:1.85, density:0.289, color:0xAEB4B9, metal:.7, rough:.28, sw:'linear-gradient(135deg,#d9dde1 0%,#9aa2aa 45%,#e1e4e7 60%,#8e969e 100%)'},
+  st1018:{bp:0xC9D2DD, name:'1018 steel', short:'1018 steel', desc:'Low carbon, weldable', lb:1.10, date:'Sep 12', jobs:11, inBand:10, state:'practice', factor:1.35, density:0.284, color:0x80878D, metal:.6, rough:.45, sw:'linear-gradient(135deg,#a9aeb3 0%,#6e757c 45%,#b3b8bc 60%,#636a70 100%)'},
+  delrin:{bp:0xF6F7F9, name:'Delrin (acetal)', short:'Delrin', desc:'Slippery, stable plastic', lb:6.20, date:'Sep 10', jobs:2, inBand:2, state:'practice', factor:0.90, density:0.051, color:0xEFEDE6, metal:0, rough:.7, sw:'linear-gradient(135deg,#ffffff 0%,#ecebe6 60%,#dedcd4 100%)'}
 };
 const FINISHES = {
   none:{name:'As machined', desc:'Fastest. Standard 125 Ra finish, edges broken.', add:0},
@@ -733,7 +753,7 @@ class Viewer{
       this.view(['right', 'left', 'back', 'front', 'top', 'bottom'][hit.face.materialIndex]);
     });
   }
-  isDark(){ return !['#eaf1f8', '#f4f7fb'].includes(cssv('--viewer').toLowerCase()); }
+  isDark(){ return !['#eaf1f8', '#f4f7fb', '#ffffff'].includes(cssv('--viewer').toLowerCase()); }
   mount(el){
     if (!HAS3D){ el.insertAdjacentHTML('beforeend', '<div class="vempty">3D preview needs a newer browser. Your file is still measured.</div>'); return; }
     this.host = el; el.prepend(this.renderer.domElement); this.ro.disconnect(); this.ro.observe(el);
@@ -742,7 +762,7 @@ class Viewer{
     if (this.zoomEl) this.zoomEl.oninput = () => this.setZoom(+this.zoomEl.value);
     this.theme(); this.resize(); this.syncLabels(); this.draw(); this.syncZoom();
   }
-  theme(){ const dark = this.isDark(); this.edgeMat.color.set(dark ? 0xCFE0F3 : 0x16233A); this.dimMat.color.set(dark ? 0xFF7A55 : 0xE4572E); }
+  theme(){ const dark = this.isDark(); this.edgeMat.color.set(dark ? 0xCFE0F3 : 0x7FA6CC); this.dimMat.color.set(dark ? 0xFF7A55 : 0xF4A57A); }
   kick(){ if (this.running) return; this.running = true; requestAnimationFrame(this.loop); }
   loop(){
     if (!this.host || !document.body.contains(this.host)){ this.running = false; return; }
