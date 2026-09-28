@@ -1,0 +1,755 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Clickable mockup of the Height Automation instant quote flow. Sample data only.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 26 26%22%3E%3Crect x=%221%22 y=%221%22 width=%2224%22 height=%2224%22 rx=%223%22 fill=%22%231F3FA8%22/%3E%3Cpath d=%22M7 19V7M19 19V7M7 13h12%22 stroke=%22white%22 stroke-width=%222.4%22/%3E%3C/svg%3E">
+<style>html{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>Height Automation Instant Quote</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,500..800&family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:wght@400;600;700&display=swap">
+<style>
+:root{
+  --bg:#EEF1F3; --surface:#FFFFFF; --surface-2:#F5F7F9; --ink:#141C24; --muted:#56626E; --line:#CAD2D9;
+  --accent:#1F3FA8; --accent-ink:#FFFFFF; --accent-soft:#E2E8F8;
+  --good:#1D7548; --good-soft:#E0F1E7; --warn:#9A5B00; --warn-soft:#FBEED6; --bad:#B0261E; --bad-soft:#F8E1DE;
+  --shadow:0 1px 2px rgba(20,28,36,.06),0 4px 16px rgba(20,28,36,.06);
+  --display:"Archivo","Arial Narrow",Arial,sans-serif; --body:"Source Sans 3","Segoe UI",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  color-scheme:dark; --bg:#0E141A; --surface:#161F28; --surface-2:#1B2530; --ink:#E5EBF0; --muted:#94A2AE; --line:#2B3743;
+  --accent:#86A0FF; --accent-ink:#0A1024; --accent-soft:#1D2950;
+  --good:#5DC48E; --good-soft:#15301F; --warn:#E6A94B; --warn-soft:#33260E; --bad:#FF8A80; --bad-soft:#3A1A17;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.25);
+}}
+:root[data-theme="dark"]{
+  color-scheme:dark; --bg:#0E141A; --surface:#161F28; --surface-2:#1B2530; --ink:#E5EBF0; --muted:#94A2AE; --line:#2B3743;
+  --accent:#86A0FF; --accent-ink:#0A1024; --accent-soft:#1D2950;
+  --good:#5DC48E; --good-soft:#15301F; --warn:#E6A94B; --warn-soft:#33260E; --bad:#FF8A80; --bad-soft:#3A1A17;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.25);
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:16px/1.5 var(--body);padding-inline:16px;padding-block:0 48px}
+.wrap{max-width:1080px;margin:0 auto}
+h1,h2,h3{font-family:var(--display);font-stretch:85%;line-height:1.1;text-wrap:balance;margin:0}
+h1{font-size:clamp(30px,5vw,46px);font-weight:800}
+h2{font-size:26px;font-weight:750}
+h3{font-size:18px;font-weight:700}
+p{margin:0}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.label{font:600 12px/1.2 var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+button,select,input{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+
+/* top bar */
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between;padding-block:12px;border-bottom:1px solid var(--line)}
+.chip{display:inline-flex;align-items:center;gap:6px;font:600 12px/1 var(--body);letter-spacing:.04em;padding:6px 10px;border-radius:999px;background:var(--warn-soft);color:var(--warn)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--surface)}
+.seg button{border:0;background:transparent;padding:8px 14px;font-weight:600;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+
+/* flow strip */
+.flow{display:flex;gap:4px;overflow-x:auto;padding-block:14px 6px;margin:0;list-style:none;padding-inline:0}
+.flow li{flex:1 0 96px;font-size:13px;font-weight:600;color:var(--muted);border-top:3px solid var(--line);padding-top:6px}
+.flow li span{font-family:var(--mono);font-weight:500;margin-right:4px}
+.flow li.done{border-color:var(--accent);color:var(--ink)}
+.flow li.now{border-color:var(--accent);color:var(--accent)}
+.flow li.skip{opacity:.45}
+
+/* site frame */
+.site{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);overflow:hidden;margin-top:12px}
+.sitehead{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:800;font-stretch:80%;font-size:20px;letter-spacing:.01em}
+.brand svg{flex:none}
+.nav{display:flex;gap:16px;font-size:15px;color:var(--muted)}
+.nav a{color:inherit;text-decoration:none}
+.nav a.on{color:var(--ink);font-weight:600}
+.screen{padding:28px 20px 32px}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid transparent;border-radius:10px;padding:12px 18px;font-weight:700;background:var(--accent);color:var(--accent-ink);text-decoration:none}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn.small{padding:8px 12px;font-size:14px}
+.btn.good{background:var(--good);color:var(--surface)}
+.btn.bad{background:transparent;color:var(--bad);border-color:var(--bad)}
+.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:24px;align-items:start}
+.panel{border:1px solid var(--line);border-radius:12px;padding:18px;background:var(--surface-2)}
+.stack{display:flex;flex-direction:column;gap:14px}
+.stack-s{display:flex;flex-direction:column;gap:8px}
+
+/* home */
+.hero{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:28px;align-items:center}
+.titleblock{border:1.5px solid var(--ink);border-radius:4px;font-size:13px}
+.titleblock div{display:grid;grid-template-columns:120px 1fr;border-top:1px solid var(--ink)}
+.titleblock div:first-child{border-top:0}
+.titleblock b,.titleblock span{padding:7px 10px}
+.titleblock b{border-right:1px solid var(--ink);font:600 11px/1.4 var(--body);letter-spacing:.08em;text-transform:uppercase}
+.titleblock span{font-family:var(--mono)}
+.steps3{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:16px;margin-top:28px}
+.steps3 > div{border-top:2px solid var(--accent);padding-top:10px}
+
+/* upload */
+.drop{border:2px dashed var(--line);border-radius:12px;padding:28px 18px;text-align:center;background:var(--surface-2)}
+.scen{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:10px;margin-top:16px}
+.scen button{text-align:left;border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:12px 14px}
+.scen button:hover{border-color:var(--accent)}
+.scen b{display:block}
+.scen small{color:var(--muted)}
+
+/* measure */
+canvas{width:100%;max-width:100%;aspect-ratio:4/3;background:var(--surface-2);border:1px solid var(--line);border-radius:12px;display:block}
+.bar{height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .2s linear}
+dl.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;margin:0}
+dl.kv dt{color:var(--muted)}
+dl.kv dd{margin:0;font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right}
+.ok{color:var(--good)} .no{color:var(--bad)}
+
+/* form */
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-weight:600}
+.field select,.field input[type=text],.field input[type=email]{border:1px solid var(--line);border-radius:8px;padding:10px 12px;background:var(--surface)}
+.hint{font-size:14px;color:var(--muted)}
+.check{display:flex;gap:10px;align-items:flex-start}
+.check input{margin-top:4px;width:18px;height:18px;flex:none;accent-color:var(--accent)}
+.spec{font-family:var(--mono);font-size:13px;line-height:1.7}
+.pill{display:inline-block;font:700 11px/1 var(--body);letter-spacing:.06em;text-transform:uppercase;padding:5px 8px;border-radius:999px}
+.pill.on{background:var(--good-soft);color:var(--good)}
+.pill.practice{background:var(--accent-soft);color:var(--accent)}
+.pill.paused{background:var(--warn-soft);color:var(--warn)}
+.pill.bad{background:var(--bad-soft);color:var(--bad)}
+
+/* result */
+.price{font-family:var(--display);font-stretch:80%;font-weight:800;font-size:clamp(44px,8vw,64px);line-height:1}
+.lines{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.lines td{padding:6px 0;border-bottom:1px solid var(--line)}
+.lines td:last-child{text-align:right;font-family:var(--mono)}
+.terms{font-size:14px;margin:0;padding-left:18px}
+.notice{border-radius:10px;padding:12px 14px;font-size:15px}
+.notice.warn{background:var(--warn-soft);color:var(--warn)}
+.notice.good{background:var(--good-soft);color:var(--good)}
+.notice.info{background:var(--accent-soft);color:var(--accent)}
+.notice.bad{background:var(--bad-soft);color:var(--bad)}
+ul.reasons{margin:0;padding-left:20px}
+
+/* checkout */
+.co{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:24px}
+.co .fake{border:1px solid var(--line);border-radius:8px;padding:10px 12px;background:var(--surface);font-family:var(--mono);font-size:14px}
+
+/* timeline */
+.tl{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,160px),1fr));gap:10px}
+.tl li{border-left:3px solid var(--line);padding:4px 0 4px 10px}
+.tl li.done{border-color:var(--good)}
+.tl li.now{border-color:var(--accent)}
+.email{border:1px solid var(--line);border-radius:12px;background:var(--surface);overflow:hidden}
+.email header{padding:10px 14px;border-bottom:1px solid var(--line);font-size:13px;color:var(--muted);background:var(--surface-2)}
+.email > div{padding:14px}
+
+/* shop */
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);padding:0 20px;overflow-x:auto}
+.tabs button{border:0;background:transparent;padding:12px 12px;font-weight:600;color:var(--muted);border-bottom:3px solid transparent;white-space:nowrap}
+.tabs button[aria-selected="true"]{color:var(--ink);border-color:var(--accent)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,160px),1fr));gap:12px}
+.stat{border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--surface-2)}
+.stat b{display:block;font-family:var(--display);font-stretch:85%;font-size:26px}
+.q{width:100%;border-collapse:collapse;font-size:15px}
+.q th{text-align:left;font:600 12px/1.2 var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:8px 10px;border-bottom:1px solid var(--line)}
+.q td{padding:10px;border-bottom:1px solid var(--line);vertical-align:middle}
+.q td.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.q tr.sel td{background:var(--accent-soft)}
+.tablewrap{overflow-x:auto}
+.statebtns{display:inline-flex;gap:4px;flex-wrap:wrap}
+.statebtns button{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:5px 9px;font-size:13px;font-weight:600}
+.statebtns button[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.statebtns button:disabled{opacity:.4;cursor:not-allowed}
+.log{list-style:none;margin:0;padding:0;font-size:15px}
+.log li{display:grid;grid-template-columns:70px 1fr;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}
+.log time{font-family:var(--mono);color:var(--muted);font-size:13px;padding-top:2px}
+.foot{margin-top:18px;font-size:13px;color:var(--muted)}
+.sitefoot{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:16px;padding:18px 20px;border-top:1px solid var(--line);background:var(--surface-2);font-size:14px}
+.howlist{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:16px}
+.howlist li::marker{font-family:var(--mono);color:var(--accent);font-weight:500}
+.qtable{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}
+.qtable th,.qtable td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:right}
+.qtable th:first-child,.qtable td:first-child{text-align:left}
+.qtable tr.cur td{background:var(--accent-soft);font-weight:700}
+.qtable button{border:0;background:transparent;color:var(--accent);font-weight:600;padding:0}
+.hqprice{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.hqprice input{width:110px;border:1px solid var(--line);border-radius:8px;padding:6px 8px;background:var(--surface)}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="wrap">
+  <div class="topbar">
+    <div class="row" style="gap:10px">
+      <span class="chip">Mockup · sample data · not a live store</span>
+    </div>
+    <div class="seg" role="group" aria-label="Choose a view">
+      <button id="vBuyer" aria-pressed="true">Buyer view</button>
+      <button id="vShop" aria-pressed="false">Shop view</button>
+    </div>
+  </div>
+
+  <ol class="flow" id="flow" aria-label="Where you are in the process"></ol>
+
+  <div class="site" id="site"></div>
+
+  <p class="foot">Every price, date, order number and email here is made up for the walkthrough. Changes in the shop view (pausing, switching a material live) change what the buyer view shows.</p>
+</div>
+
+<script>
+(function(){
+const $ = s => document.querySelector(s);
+const money = n => '$' + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+const now = () => new Date().toLocaleTimeString([], {hour:'numeric', minute:'2-digit'});
+function addBusinessDays(d, n){ const x = new Date(d); while(n > 0){ x.setDate(x.getDate()+1); const w = x.getDay(); if(w !== 0 && w !== 6) n--; } return x; }
+const fmtDate = d => d.toLocaleDateString([], {weekday:'short', month:'short', day:'numeric'});
+const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+const SCEN = {
+  plate:   {file:'mounting-plate.step', title:'Mounting plate', dims:[4,3,0.5], vol:5.42, holes:4, bodies:1, intricate:false, material:'al6061', note:'Simple part, aluminum, gets an instant price'},
+  bracket: {file:'angle-bracket.step', title:'Angle bracket', dims:[3,2,2], vol:3.10, holes:2, bodies:1, intricate:false, material:'ss304', note:'Stainless is still priced by the team'},
+  housing: {file:'sensor-housing.step', title:'Sensor housing', dims:[2.5,2.5,1.25], vol:4.05, holes:1, bodies:1, intricate:true, material:'al6061', threads:true, note:'Threads and a deep pocket go to a person'},
+  dxf:     {file:'flat-pattern.dxf', title:'Flat pattern', dxf:true, material:'al6061', note:'2D drawings are always quoted by the team'}
+};
+const S = {
+  view:'buyer', step:'home', scen:'plate', material:'al6061', qty:10,
+  dec:{threads:false, tight:false, drawing:false, own:false}, country:'US',
+  email:'buyer@example.com', codeSent:false, verified:false, attest:false, terms:false,
+  payState:'idle', paused:false, pauseReason:'', cap:500, maxQty:10, perDay:10, openCap:3, rampDone:2,
+  shopTab:'queue', selOrder:null, nextOrder:1042, nextHQ:2031, hold:900, holdTimer:null,
+  materials:{
+    al6061:{name:'6061 aluminum', lb:3.10, date:'Sep 15', jobs:12, gate:true,  state:'on',       factor:1.00},
+    al7075:{name:'7075 aluminum', lb:5.40, date:'Sep 15', jobs:7,  gate:false, state:'practice', factor:1.28},
+    ss304: {name:'304 stainless', lb:2.90, date:'Sep 12', jobs:4,  gate:false, state:'practice', factor:1.85},
+    st1018:{name:'1018 steel',    lb:1.10, date:'Sep 12', jobs:9,  gate:false, state:'practice', factor:1.35},
+    delrin:{name:'Delrin (acetal)',lb:6.20, date:'Sep 10', jobs:2,  gate:false, state:'practice', factor:0.90}
+  },
+  orders:[
+    {id:1041, part:'Spacer block', material:'al6061', qty:5, total:164.00, email:'ops@example.org', status:'review', due:addBusinessDays(new Date(),1), risk:'Low', match:true}
+  ],
+  hand:[{id:'HQ-2030', part:'Manifold, 7075', reason:'7075 aluminum is quoted by the team', silent:612.00}],
+  log:[{t:'8:02 AM', m:'Order #1041 paid. Review due in 1 business day.'}]
+};
+
+/* pricing (sample) */
+function unitPrice(scen, mat, qty){
+  const base = scen.vol * 3.1 + 5.8; // metal and cutting, sample
+  const setup = 60;
+  return Math.round((base * S.materials[mat].factor + setup / qty) * 100) / 100;
+}
+function gate(){
+  const sc = SCEN[S.scen], m = S.materials[S.material], r = [];
+  if (sc.dxf) r.push('2D drawings are quoted by our team.');
+  if (S.paused) r.push('Instant pricing is paused right now.');
+  if (!sc.dxf && m.state !== 'on') r.push(m.name + ' is priced by our team for now.');
+  if (S.dec.threads) r.push('Threads need a person to check them.');
+  if (S.dec.tight) r.push('Tolerances tighter than ±0.005 in are quoted by our team.');
+  if (S.dec.drawing) r.push('Parts that come with a drawing are quoted by our team.');
+  if (S.dec.own) r.push('Parts made from your own material are quoted by our team.');
+  if (sc.closed === false) r.push('The file isn\'t a closed solid, so we can\'t measure it exactly.');
+  if (sc.bodies > 1) r.push('The file has more than one separate part in it.');
+  if (sc.intricate) r.push(sc.custom ? 'This shape needs a closer look (pockets or thin walls).' : 'This shape needs a closer look (deep pocket).');
+  if (S.country !== 'US') r.push('Instant orders ship to US addresses only.');
+  if (S.qty > S.maxQty) r.push('Orders over ' + S.maxQty + ' pieces are quoted by our team.');
+  let unit = 0, total = 0;
+  if (!sc.dxf){ unit = unitPrice(sc, S.material, S.qty); total = unit * S.qty; }
+  if (!sc.dxf && total > S.cap) r.push('Orders over ' + money(S.cap) + ' are quoted by our team.');
+  const open = S.orders.filter(o => o.status === 'review').length;
+  if (open >= S.openCap && r.length === 0) r.push('Our review queue is full; our team will quote this instead.');
+  return {instant: r.length === 0, reasons:r, unit, total};
+}
+
+/* flow strip */
+const FLOW = ['Upload','Measure','Details','Price','Pay','Review','Make and ship'];
+function flowIndex(){
+  if (S.view === 'shop') return 5;
+  return {home:-1, how:-1, upload:0, measure:1, details:2, result:3, checkout:4, done:5, requested:3}[S.step];
+}
+function renderFlow(){
+  const i = flowIndex(), hand = S.step === 'requested';
+  $('#flow').innerHTML = FLOW.map((f,k) => {
+    let c = k < i ? 'done' : (k === i ? 'now' : '');
+    if (hand && k === 4) c = 'skip';
+    return '<li class="'+c+'"><span>'+(k+1)+'</span>'+f+'</li>';
+  }).join('');
+}
+
+/* shell */
+const LOGO = '<svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><rect x="1" y="1" width="24" height="24" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M7 19V7M19 19V7M7 13h12" stroke="currentColor" stroke-width="2.4"/></svg>';
+function head(nav){
+  return '<div class="sitehead"><div class="brand">'+LOGO+'Height Automation</div><nav class="nav">'+nav+'</nav></div>';
+}
+function render(){
+  $('#vBuyer').setAttribute('aria-pressed', S.view === 'buyer');
+  $('#vShop').setAttribute('aria-pressed', S.view === 'shop');
+  renderFlow();
+  const site = $('#site');
+  if (S.view === 'shop'){ site.innerHTML = shop(); bindShop(); return; }
+  const onQuote = S.step !== 'home';
+  const isQ = !['home','how'].includes(S.step);
+  const nav = '<a href="#" data-go="home" class="'+(S.step==='home'?'on':'')+'">Home</a><a href="#" data-go="how" class="'+(S.step==='how'?'on':'')+'">How it works</a><a href="#" data-go="upload" class="'+(isQ?'on':'')+'">Get a quote</a>';
+  const foot = '<div class="sitefoot"><div><b>Height Automation</b><br>CNC machining · Grain Valley, Missouri<br>Mon to Fri, 7 AM to 4 PM Central</div><div class="stack-s"><span>Terms of sale</span><span>Refund policy</span><span>Privacy policy</span></div><div class="hint">Instant orders ship to US addresses only.<br>Every order is reviewed by a machinist before production.</div></div>';
+  site.innerHTML = head(nav) + '<div class="screen">' + buyer() + '</div>' + foot;
+  bindBuyer();
+}
+
+/* buyer screens */
+function buyer(){
+  switch(S.step){
+    case 'home': return home();
+    case 'how': return how();
+    case 'upload': return upload();
+    case 'measure': return measure();
+    case 'details': return details();
+    case 'result': return result();
+    case 'checkout': return checkout();
+    case 'done': return done();
+    case 'requested': return requested();
+  }
+}
+function home(){
+  return '<div class="hero"><div class="stack">'
+   + '<span class="label">CNC machining · Grain Valley, Missouri</span>'
+   + '<h1>Drop your part file. Get a price in seconds.</h1>'
+   + '<p class="muted" style="max-width:60ch">Simple parts in materials we have proven get an instant, fixed price you can pay right away. Everything else gets a quote from our team within one business day. A machinist checks every order before any metal is cut.</p>'
+   + '<div class="row"><button class="btn" data-go="upload">Get a quote</button><span class="hint">STEP or STL files</span></div></div>'
+   + '<div class="titleblock" aria-label="Shop details"><div><b>Shop</b><span>Height Automation</span></div><div><b>Location</b><span>Grain Valley, MO</span></div><div><b>Files</b><span>STEP · STL · DXF · PDF</span></div><div><b>Instant</b><span>simple parts, proven materials</span></div><div><b>Review</b><span>every order, 1 business day</span></div></div></div>'
+   + '<div class="steps3"><div><h3>1. Upload</h3><p class="muted">Your file is measured right in your browser: size, metal volume and holes.</p></div><div><h3>2. Price or quote</h3><p class="muted">A fixed price and a Pay button, or a quote from our team if the part needs a person.</p></div><div><h3>3. Checked, then made</h3><p class="muted">We review every paid order within one business day. If we can\'t make it as priced, you get a full refund.</p></div></div>';
+}
+function how(){
+  const q = (h, p) => '<div class="stack-s"><h3>'+h+'</h3><p class="muted">'+p+'</p></div>';
+  return '<div class="stack" style="max-width:760px"><span class="label">How it works</span><h1>From file to finished part</h1>'
+   + '<ol class="howlist">'
+   + '<li>'+q('Upload your file','Send a STEP or STL file. Your browser measures the part on the spot: its size, how much metal it takes, and its holes. Your file is stored privately and only our team can open it.')+'</li>'
+   + '<li>'+q('Instant price, or a quote from our team','Simple parts in materials we have proven get a fixed price right away. Parts with threads, tight tolerances, drawings or complex shapes get a quote from a person within one business day.')+'</li>'
+   + '<li>'+q('Pay at our secure checkout','Tax and shipping are added at checkout. The price you saw is the price you pay for that file, material and quantity.')+'</li>'
+   + '<li>'+q('A machinist reviews every order','Within one business day, before any metal is cut. If we can\'t make it as priced, we cancel and refund you in full. If we run late, we tell you and you can cancel free.')+'</li>'
+   + '<li>'+q('Made and shipped','Your ship date is set when you pay. Parts ship with tracking and a signature on delivery.')+'</li>'
+   + '</ol>'
+   + '<div class="panel stack-s"><h3>What gets an instant price</h3><ul class="reasons"><li>One solid part per file, closed and measurable</li><li>A material we have proven on our own past jobs</li><li>Standard tolerance (±0.005 in), no threads, no drawing notes</li><li>Up to 10 pieces and up to the instant order limit</li><li>Shipping to a US address</li></ul><p class="hint">Everything else is welcome too. It just gets a quote from our team.</p></div>'
+   + '<div class="row"><button class="btn" data-go="upload">Get a quote</button></div></div>';
+}
+function upload(){
+  const b = Object.entries(SCEN).map(([k,v]) => '<button data-scen="'+k+'"><b>'+v.title+'</b><span class="mono" style="font-size:13px">'+v.file+'</span><br><small>'+v.note+'</small></button>').join('');
+  return '<div class="stack" style="max-width:760px"><h2>Upload your part</h2>'
+   + '<label class="drop" id="dropzone" for="fileIn" style="display:block;cursor:pointer"><p><b>Drag a STEP or STL file here, or click to choose one</b></p><p class="hint">Up to 20 MB. Bigger file? Paste a share link instead.</p><p class="hint" style="margin-top:8px">Your file is measured for real, right in your browser.</p><input type="file" id="fileIn" accept=".stl,.step,.stp,.dxf" hidden></label>'
+   + (S.uploadInfo?'<div class="notice info">'+S.uploadInfo+'</div>':'')
+   + (S.uploadMsg?'<div class="notice warn">'+S.uploadMsg+'</div>':'')
+   + (/github\.io$/.test(location.hostname) ? '<p class="hint">No part file handy? Download a sample: <a href="sample-parts/mounting-plate.stl" download>mounting plate</a> · <a href="sample-parts/angle-bracket.stl" download>angle bracket</a> · <a href="sample-parts/sensor-housing.stl" download>sensor housing</a> (all in inches).</p>' : '')
+   + '<div><span class="label">Or try a built-in sample part</span><div class="scen">'+b+'</div></div></div>';
+}
+function measure(){
+  const sc = SCEN[S.scen];
+  if (sc.dxf){
+    return '<div class="stack" style="max-width:640px"><h2>'+sc.file+'</h2><div class="notice info">This is a 2D drawing, so we can\'t measure it automatically. Our team will quote it.</div><div class="row"><button class="btn" data-go="details">Continue</button><button class="btn ghost" data-go="upload">Pick another file</button></div></div>';
+  }
+  const w = (sc.vol*0.0975).toFixed(2);
+  const closed = sc.closed !== false;
+  const units = (sc.custom && !sc.stepFile) ? '<div class="panel stack-s"><b>Your file doesn\'t record its units.</b><p class="hint">Is this part '+sc.rawDims.map(d=>d.toFixed(3)).join(' × ')+' inches, or '+sc.rawDims.map(d=>d.toFixed(1)).join(' × ')+' millimeters?</p><div class="row"><label class="check"><input type="radio" name="units" value="in"'+(S.upload.units==='in'?' checked':'')+'><span>Inches</span></label><label class="check"><input type="radio" name="units" value="mm"'+(S.upload.units==='mm'?' checked':'')+'><span>Millimeters</span></label></div></div>' : '';
+  const canGo = !sc.custom || !!S.upload.units;
+  return '<div class="grid2"><div class="stack"><h2>'+sc.file+'</h2><canvas id="cv" width="640" height="480" aria-label="3D preview of the part"></canvas></div>'
+   + '<div class="stack"><div class="stack-s"><span class="label" id="mstat">'+(S.measured?'Measured':'Measuring your part')+'</span><div class="bar"><i id="mbar"'+(S.measured?' style="width:100%"':'')+'></i></div></div>'
+   + units
+   + '<dl class="kv" id="kv"'+(S.measured&&canGo?'':' hidden')+'><dt>Size (in)</dt><dd>'+sc.dims.map(d=>d.toFixed(3)).join(' × ')+'</dd><dt>Size (mm)</dt><dd>'+sc.dims.map(d=>(d*25.4).toFixed(1)).join(' × ')+'</dd><dt>Metal volume</dt><dd>'+sc.vol.toFixed(2)+' in³</dd><dt>Through-holes</dt><dd>'+sc.holes+'</dd><dt>Solid bodies</dt><dd>'+sc.bodies+'</dd><dt>Closed, watertight</dt><dd class="'+(closed?'ok':'no')+'">'+(closed?'yes':'no')+'</dd><dt>Est. weight (aluminum)</dt><dd>'+w+' lb</dd>'+(sc.tris?'<dt>Triangles in file</dt><dd>'+sc.tris.toLocaleString()+'</dd>':'')+'</dl>'
+   + '<p class="hint" id="mnote"'+(S.measured&&canGo?'':' hidden')+'>Measured in your browser. Our server double-checks the numbers before it prices anything.</p>'
+   + '<div class="row"><button class="btn" id="toDetails" data-go="details"'+(S.measured&&canGo?'':' disabled')+'>Continue</button><button class="btn ghost" data-go="upload">Pick another file</button></div></div></div>';
+}
+function matOpts(){
+  return Object.entries(S.materials).map(([k,m]) => '<option value="'+k+'"'+(k===S.material?' selected':'')+'>'+m.name+(m.state==='on'&&!S.paused?' · instant price':' · quoted by our team')+'</option>').join('');
+}
+function details(){
+  const sc = SCEN[S.scen], m = S.materials[S.material];
+  const code = !S.codeSent ? '<button class="btn ghost small" id="send">Send code</button>'
+    : (S.verified ? '<span class="pill on">Email verified</span>' : '<div class="row"><input type="text" id="code" inputmode="numeric" maxlength="6" placeholder="6-digit code" style="width:140px" aria-label="6-digit code"><button class="btn ghost small" id="verify">Verify</button><span class="hint">Sample code: 482913</span></div>');
+  const ready = S.verified && S.attest;
+  return '<div class="grid2"><div class="stack"><h2>Tell us about the part</h2>'
+   + '<div class="field"><label for="mat">Material</label><select id="mat">'+matOpts()+'</select></div>'
+   + '<div class="field"><label for="qty">Quantity</label><select id="qty">'+[1,5,10,25].map(q=>'<option'+(q===S.qty?' selected':'')+'>'+q+'</option>').join('')+'</select></div>'
+   + '<div class="panel"><span class="label">Default spec, unless you tell us otherwise</span><div class="spec">'+(S.material.startsWith('al')?(S.material==='al6061'?'6061-T6':'7075-T6'):m.name)+' · ±0.005 in general tolerance<br>as-machined finish, 125 Ra · edges deburred<br>no threads · no heat treat · no certs</div></div>'
+   + '<fieldset class="stack-s" style="border:0;padding:0;margin:0"><legend class="label" style="margin-bottom:6px">Does your part need any of these?</legend>'
+   + chk('threads','Threads (tapped holes)', S.dec.threads) + chk('tight','Tolerance tighter than ±0.005 in', S.dec.tight) + chk('drawing','A drawing with notes', S.dec.drawing) + chk('own','Made from material I supply', S.dec.own)
+   + '</fieldset></div>'
+   + '<div class="stack"><div class="field"><label for="email">Email</label><input type="email" id="email" value="'+S.email+'"><div class="row">'+code+'</div></div>'
+   + '<div class="field"><label for="country">Ship to</label><select id="country"><option value="US"'+(S.country==='US'?' selected':'')+'>United States</option><option value="CA"'+(S.country==='CA'?' selected':'')+'>Canada</option></select></div>'
+   + '<label class="check"><input type="checkbox" id="attest"'+(S.attest?' checked':'')+'><span>This is not a firearm, weapon or export-controlled part, and I am 18 or older buying for business use.</span></label>'
+   + '<button class="btn" id="getPrice"'+(ready?'':' disabled')+'>Get my price</button>'
+   + (ready?'':'<p class="hint">Verify your email and tick the box to continue.</p>')
+   + '</div></div>';
+}
+function chk(id, text, on){ return '<label class="check"><input type="checkbox" data-dec="'+id+'"'+(on?' checked':'')+'><span>'+text+'</span></label>'; }
+function result(){
+  const sc = SCEN[S.scen], g = gate();
+  if (!g.instant){
+    return '<div class="stack" style="max-width:680px"><span class="label">'+(sc.title)+' · '+S.materials[S.material].name+' · qty '+S.qty+'</span><h2>Our team will quote this within 1 business day</h2>'
+     + '<div class="panel stack-s"><b>Why this goes to a person</b><ul class="reasons">'+g.reasons.map(r=>'<li>'+r+'</li>').join('')+'</ul></div>'
+     + '<p class="muted">We\'ll email you a price and a pay link. Nothing is charged until you pay that link.</p>'
+     + '<div class="row"><button class="btn" id="sendReq">Send my request</button><button class="btn ghost" data-go="details">Change details</button></div></div>';
+  }
+  const ship = addBusinessDays(new Date(), 8);
+  const mm = Math.floor(S.hold/60), ss = String(S.hold%60).padStart(2,'0');
+  let pay;
+  if (S.payState === 'idle') pay = '<button class="btn" id="pay"'+(S.terms?'':' disabled')+'>Pay now</button>';
+  else if (S.payState === 'working') pay = '<button class="btn" disabled>Getting your order ready…</button>';
+  else pay = '<button class="btn" id="toCheckout">Continue to secure checkout →</button>';
+  return '<div class="grid2"><div class="stack"><span class="label">'+sc.title+' · '+S.materials[S.material].name+'</span><div class="price mono">'+money(g.total)+'</div>'
+   + '<table class="lines"><tr><td>'+S.qty+' × '+money(g.unit)+' each</td><td>'+money(g.total)+'</td></tr><tr><td>Tax and shipping</td><td>at checkout</td></tr></table>'
+   + '<div class="stack-s"><span class="label">Price by quantity</span><table class="qtable"><thead><tr><th>Qty</th><th>Each</th><th>Total</th><th></th></tr></thead><tbody>'
+   + [1,5,10,25].map(q => { const u = unitPrice(sc, S.material, q), tot = u*q; const inst = q <= S.maxQty && tot <= S.cap;
+       return '<tr class="'+(q===S.qty?'cur':'')+'"><td>'+q+'</td><td class="mono">'+(inst?money(u):'—')+'</td><td class="mono">'+(inst?money(tot):'quoted by our team')+'</td><td>'+(q===S.qty||!inst?'':'<button data-qty="'+q+'">Pick</button>')+'</td></tr>'; }).join('')
+   + '</tbody></table><p class="hint">Setup is shared across the parts, so each part costs less at higher quantities.</p></div>'
+   + '<p>Ships by <b>'+fmtDate(ship)+'</b>: 7 business days after our one-business-day review.</p>'
+   + '<p class="hint mono">Price held for '+mm+':'+ss+'. After you click Pay, you have 24 hours to finish checkout.</p>'
+   + '<div class="row"><button class="btn ghost small" data-go="details">Change details</button></div></div>'
+   + '<div class="stack panel"><b>Before you pay</b><ul class="terms"><li>This price is fixed for this file, material, quantity and lead time.</li><li>A machinist reviews every order within 1 business day. If we can\'t make it as priced, we cancel and refund in full.</li><li>If we run late, we tell you and you can cancel free.</li><li>Once your part is in production it can\'t be cancelled.</li></ul>'
+   + '<label class="check"><input type="checkbox" id="terms"'+(S.terms?' checked':'')+'><span>I agree to the terms of sale.</span></label>'+pay+'</div></div>';
+}
+function totals(){
+  const g = gate(); const ship = 14.00; const tax = Math.round(g.total * 0.0785 * 100)/100;
+  return {sub:g.total, ship, tax, total:g.total+ship+tax, unit:g.unit};
+}
+function checkout(){
+  const t = totals(), sc = SCEN[S.scen];
+  return '<div class="stack"><span class="label">Secure checkout (sample screen, no real payment)</span><div class="co"><div class="stack">'
+   + '<div class="field"><label>Contact</label><div class="fake">'+S.email+'</div></div>'
+   + '<div class="field"><label>Ship to</label><div class="fake">Sample Buyer<br>400 Sample Industrial Dr<br>Lee\'s Summit, MO 64086</div></div>'
+   + '<div class="field"><label>Shipping</label><div class="fake">Ground, signature on delivery · '+money(t.ship)+'</div></div>'
+   + '<div class="field"><label>Card</label><div class="fake">•••• •••• •••• 0000 (sample)</div></div></div>'
+   + '<div class="panel stack"><b>Order summary</b><table class="lines"><tr><td>'+sc.title+', '+S.materials[S.material].name+' × '+S.qty+'</td><td>'+money(t.sub)+'</td></tr><tr><td>Shipping</td><td>'+money(t.ship)+'</td></tr><tr><td>Sales tax (sample rate)</td><td>'+money(t.tax)+'</td></tr><tr><td><b>Total</b></td><td><b>'+money(t.total)+'</b></td></tr></table>'
+   + '<button class="btn" id="payNow">Pay '+money(t.total)+'</button></div></div></div>';
+}
+function done(){
+  const o = S.orders[S.orders.length-1];
+  const due = fmtDate(o.due), ship = fmtDate(addBusinessDays(o.paidAt, 8));
+  return '<div class="stack"><div class="notice good">Paid. Order #'+o.id+' is in review.</div><h2>Thanks. A machinist will check your order by '+due+'.</h2>'
+   + '<ol class="tl"><li class="done"><b>Paid</b><br><span class="hint">today</span></li><li class="now"><b>Review</b><br><span class="hint">by '+due+'</span></li><li><b>Production</b><br><span class="hint">after review</span></li><li><b>Shipped</b><br><span class="hint">by '+ship+'</span></li></ol>'
+   + '<div class="email"><header>From: Height Automation · Subject: Order #'+o.id+' received, in review</header><div class="stack-s"><p>Hi, thanks for your order of '+o.qty+' × '+o.part+' ('+S.materials[o.material].name+'), '+money(o.total)+' plus tax and shipping.</p><p>A machinist checks every order within one business day, before any metal is cut. If we can\'t make it as priced, we\'ll cancel and refund you in full. Expected ship date: '+ship+'.</p></div></div>'
+   + '<div class="row"><button class="btn" id="seeShop">See it in the shop view →</button><button class="btn ghost" id="again">Start another quote</button></div></div>';
+}
+function requested(){
+  const h = S.hand[S.hand.length-1];
+  return '<div class="stack" style="max-width:680px"><div class="notice info">Request '+h.id+' sent.</div><h2>We\'ll email your quote within 1 business day.</h2>'
+   + '<div class="email"><header>From: Height Automation · Subject: We got your quote request '+h.id+'</header><div class="stack-s"><p>Thanks for sending '+SCEN[S.scen].file+'. Our team is pricing it now. You\'ll get a price and a pay link by email within one business day.</p><p class="hint">Nothing is charged until you pay that link.</p></div></div>'
+   + '<div class="row"><button class="btn" id="seeShopH">See it in the shop view →</button><button class="btn ghost" id="again">Start another quote</button></div></div>';
+}
+
+/* 3D preview */
+let raf = null;
+function drawPart(){
+  const cv = $('#cv'); if (!cv) return;
+  const ctx = cv.getContext('2d'), sc = SCEN[S.scen];
+  const cs = getComputedStyle(document.documentElement);
+  const ink = cs.getPropertyValue('--ink').trim(), acc = cs.getPropertyValue('--accent').trim(), line = cs.getPropertyValue('--muted').trim();
+  const [L,W,H] = sc.dims, k = 70 / Math.max(L,W,H) * 1.6;
+  let a = 0.6;
+  function P(x,y,z){ const ca=Math.cos(a), sa=Math.sin(a); const X = x*ca - y*sa, Y = x*sa + y*ca; return [320 + X*k, 250 + (Y*0.5 - z)*k]; }
+  function frame(){
+    ctx.clearRect(0,0,640,480);
+    if (sc.custom){ drawMesh(ctx, a); ctx.fillStyle=line; ctx.font='13px "IBM Plex Mono", monospace'; ctx.fillText(sc.dims.map(d=>d.toFixed(3)).join(' × ')+' in', 16, 462); if (!reduce){ a += 0.006; raf = requestAnimationFrame(frame); } return; }
+    const x0=-L/2,x1=L/2,y0=-W/2,y1=W/2;
+    const top=[[x0,y0,H/2],[x1,y0,H/2],[x1,y1,H/2],[x0,y1,H/2]], bot=top.map(p=>[p[0],p[1],-H/2]);
+    const faces=[[0,1],[1,2],[2,3],[3,0]].map(([i,j])=>({pts:[top[i],top[j],bot[j],bot[i]], d:(top[i][0]+top[j][0])*Math.sin(a)+(top[i][1]+top[j][1])*Math.cos(a)}));
+    faces.sort((p,q)=>p.d-q.d);
+    ctx.lineWidth=1.5; ctx.strokeStyle=ink;
+    faces.forEach((f,i)=>{ ctx.beginPath(); f.pts.forEach((p,n)=>{const q=P(...p); n?ctx.lineTo(...q):ctx.moveTo(...q);}); ctx.closePath(); ctx.fillStyle = acc; ctx.globalAlpha = 0.10 + i*0.05; ctx.fill(); ctx.globalAlpha=1; ctx.stroke(); });
+    ctx.beginPath(); top.forEach((p,n)=>{const q=P(...p); n?ctx.lineTo(...q):ctx.moveTo(...q);}); ctx.closePath(); ctx.fillStyle=acc; ctx.globalAlpha=0.22; ctx.fill(); ctx.globalAlpha=1; ctx.stroke();
+    const r = Math.min(L,W)*0.09, spots = [];
+    if (sc.holes >= 4) spots.push([x0+L*0.15,y0+W*0.18],[x1-L*0.15,y0+W*0.18],[x1-L*0.15,y1-W*0.18],[x0+L*0.15,y1-W*0.18]);
+    else if (sc.holes === 2) spots.push([x0+L*0.25,0],[x1-L*0.25,0]);
+    else spots.push([0,0]);
+    spots.forEach(([cx,cy])=>{ ctx.beginPath(); for(let t=0;t<=32;t++){ const th=t/32*Math.PI*2; const q=P(cx+Math.cos(th)*(sc.intricate?r*2.2:r), cy+Math.sin(th)*(sc.intricate?r*2.2:r), H/2); t?ctx.lineTo(...q):ctx.moveTo(...q);} ctx.strokeStyle=ink; ctx.stroke(); });
+    ctx.fillStyle=line; ctx.font='13px "IBM Plex Mono", monospace';
+    ctx.fillText(L.toFixed(3)+' × '+W.toFixed(3)+' × '+H.toFixed(3)+' in', 16, 462);
+    if (!reduce){ a += 0.006; raf = requestAnimationFrame(frame); }
+  }
+  cancelAnimationFrame(raf); frame();
+}
+function runMeasure(){
+  if (SCEN[S.scen].dxf) return;
+  drawPart();
+  if (S.measured) return;
+  let p = 0;
+  const tick = () => { p = Math.min(100, p + (reduce?100:7)); const bar = $('#mbar'); if (bar) bar.style.width = p + '%';
+    if (p < 100) setTimeout(tick, 90);
+    else { S.measured = true; if (S.step === 'measure') render(); } };
+  tick();
+}
+
+/* real STL reading and measuring */
+function parseSTL(buf){
+  const dv = new DataView(buf);
+  if (buf.byteLength >= 84){
+    const n = dv.getUint32(80, true);
+    if (84 + n * 50 === buf.byteLength){
+      const t = new Float32Array(n * 9);
+      for (let i = 0; i < n; i++) for (let k = 0; k < 9; k++) t[i*9+k] = dv.getFloat32(84 + i*50 + 12 + k*4, true);
+      return t;
+    }
+  }
+  const txt = new TextDecoder().decode(buf), nums = [];
+  const re = /vertex\s+([-+\d.eE]+)\s+([-+\d.eE]+)\s+([-+\d.eE]+)/g; let m;
+  while ((m = re.exec(txt))) nums.push(+m[1], +m[2], +m[3]);
+  if (!nums.length || nums.length % 9) throw new Error('not an STL');
+  return new Float32Array(nums);
+}
+function measureMesh(t){
+  const n = t.length / 9;
+  let mn = [Infinity,Infinity,Infinity], mx = [-Infinity,-Infinity,-Infinity];
+  for (let i = 0; i < t.length; i += 3) for (let k = 0; k < 3; k++){ mn[k] = Math.min(mn[k], t[i+k]); mx[k] = Math.max(mx[k], t[i+k]); }
+  const span = Math.max(mx[0]-mn[0], mx[1]-mn[1], mx[2]-mn[2]) || 1, q = span * 1e-5;
+  const ids = new Map(), tri = new Int32Array(n * 3);
+  for (let i = 0; i < n * 3; i++){
+    const key = Math.round(t[i*3]/q)+','+Math.round(t[i*3+1]/q)+','+Math.round(t[i*3+2]/q);
+    let id = ids.get(key); if (id === undefined){ id = ids.size; ids.set(key, id); } tri[i] = id;
+  }
+  let vol = 0, area = 0;
+  for (let i = 0; i < n; i++){
+    const a = i*9, ax=t[a],ay=t[a+1],az=t[a+2], bx=t[a+3],by=t[a+4],bz=t[a+5], cx=t[a+6],cy=t[a+7],cz=t[a+8];
+    vol += (ax*(by*cz-bz*cy) - ay*(bx*cz-bz*cx) + az*(bx*cy-by*cx)) / 6;
+    const ux=bx-ax,uy=by-ay,uz=bz-az, wx=cx-ax,wy=cy-ay,wz=cz-az;
+    area += Math.hypot(uy*wz-uz*wy, uz*wx-ux*wz, ux*wy-uy*wx) / 2;
+  }
+  const edges = new Map();
+  for (let i = 0; i < n; i++) for (let k = 0; k < 3; k++){
+    const a = tri[i*3+k], b = tri[i*3+(k+1)%3], key = a < b ? a+'_'+b : b+'_'+a;
+    edges.set(key, (edges.get(key) || 0) + 1);
+  }
+  let closed = true; for (const c of edges.values()) if (c !== 2){ closed = false; break; }
+  const par = Array.from({length:ids.size}, (_, i) => i), f = x => { while (par[x] !== x){ par[x] = par[par[x]]; x = par[x]; } return x; };
+  for (let i = 0; i < n; i++){ par[f(tri[i*3])] = f(tri[i*3+1]); par[f(tri[i*3+1])] = f(tri[i*3+2]); }
+  const roots = new Set(); for (let i = 0; i < ids.size; i++) roots.add(f(i));
+  const bodies = roots.size, chi = ids.size - edges.size + n;
+  const holes = closed ? Math.max(0, Math.round((2 * bodies - chi) / 2)) : 0;
+  return {dims:[mx[0]-mn[0], mx[1]-mn[1], mx[2]-mn[2]], vol:Math.abs(vol), area, closed, bodies, holes, tris:n, mn, mx};
+}
+function applyUnits(){
+  const u = S.upload, m = u.m, f = u.units === 'mm' ? 1/25.4 : 1;
+  const dims = m.dims.map(d => d * f), vol = m.vol * f * f * f, area = m.area * f * f;
+  const bboxV = dims[0]*dims[1]*dims[2], bboxA = 2*(dims[0]*dims[1] + dims[1]*dims[2] + dims[0]*dims[2]);
+  const fill = vol / (bboxV || 1), ratio = (area / (vol || 1)) / (bboxA / (bboxV || 1));
+  const title = u.name.replace(/\.[^.]+$/, '').replace(/[-_]+/g, ' ').replace(/^./, c => c.toUpperCase());
+  SCEN.custom = {file:u.name, title, dims, rawDims:m.dims, vol, holes:m.holes, bodies:m.bodies, closed:m.closed, tris:m.tris,
+    intricate: fill < 0.2 || ratio > 1.8, material:'al6061', custom:true, note:'Your file'};
+}
+function takeFile(file){
+  if (!file) return;
+  const ext = (file.name.split('.').pop() || '').toLowerCase();
+  S.uploadMsg = '';
+  if (file.size > 20 * 1024 * 1024){ S.uploadMsg = 'That file is over 20 MB. On the live page you would paste a share link, and our team would quote it.'; render(); return; }
+  if (ext === 'step' || ext === 'stp'){ takeStep(file); return; }
+  if (ext === 'dxf'){ S.scen = 'dxf'; SCEN.dxf.file = file.name; S.material = 'al6061'; S.qty = 1; S.measured = false; go('measure'); return; }
+  if (ext !== 'stl'){ S.uploadMsg = 'We read STEP, STL and DXF files. Anything else goes to our team as a quote request.'; render(); return; }
+  file.arrayBuffer().then(buf => {
+    let t; try { t = parseSTL(buf); } catch(e){ S.uploadMsg = 'We couldn\'t read that STL file. On the live page it would go to our team as a quote request.'; render(); return; }
+    const m = measureMesh(t);
+    S.upload = {name:file.name, t, m, units:'', guess: Math.max(...m.dims) > 30 ? 'mm' : 'in'};
+    applyUnitsGuess();
+    S.scen = 'custom'; S.material = 'al6061'; S.qty = 10; S.dec = {threads:false, tight:false, drawing:false, own:false}; S.measured = false;
+    go('measure');
+  });
+}
+const OCCT = 'https://cdn.jsdelivr.net/npm/occt-import-js@0.0.23/dist/';
+let occtP = null;
+function loadOcct(){
+  if (!occtP) occtP = new Promise((res, rej) => {
+    const s = document.createElement('script'); s.src = OCCT + 'occt-import-js.js';
+    s.onload = () => { try { window.occtimportjs({locateFile: f => OCCT + f}).then(res, rej); } catch(e){ rej(e); } };
+    s.onerror = rej; document.head.appendChild(s);
+  });
+  return occtP;
+}
+function takeStep(file){
+  S.uploadMsg = ''; S.uploadInfo = 'Loading the STEP reader. The first file takes a few seconds.'; render();
+  Promise.all([loadOcct(), file.arrayBuffer()]).then(([occt, buf]) => {
+    const r = occt.ReadStepFile(new Uint8Array(buf), {linearUnit:'inch', linearDeflectionType:'bounding_box_ratio', linearDeflection:0.002, angularDeflection:0.5});
+    if (!r || !r.success || !r.meshes.length) throw new Error('read failed');
+    const parts = [];
+    for (const m of r.meshes){ const p = m.attributes.position.array, ix = m.index.array; for (let i = 0; i < ix.length; i++){ const v = ix[i]*3; parts.push(p[v], p[v+1], p[v+2]); } }
+    const t = new Float32Array(parts), mm = measureMesh(t);
+    mm.bodies = r.meshes.length; mm.closed = true;
+    S.upload = {name:file.name, t, m:mm, units:'in', guess:'in', step:true};
+    S.uploadInfo = '';
+    applyUnits(); SCEN.custom.stepFile = true;
+    S.scen = 'custom'; S.material = 'al6061'; S.qty = 10; S.dec = {threads:false, tight:false, drawing:false, own:false}; S.measured = false;
+    go('measure');
+  }).catch(() => {
+    S.uploadInfo = '';
+    S.uploadMsg = 'This viewer couldn\'t load the STEP reader, or couldn\'t read the file. The live quote page reads STEP files exactly. Try an STL file here, or one of the sample parts below.';
+    render();
+  });
+}
+function applyUnitsGuess(){ const keep = S.upload.units; S.upload.units = S.upload.guess; applyUnits(); S.upload.units = keep; }
+function drawMesh(ctx, a){
+  const u = S.upload, t = u.t, m = u.m, n = m.tris;
+  const c = [(m.mn[0]+m.mx[0])/2, (m.mn[1]+m.mx[1])/2, (m.mn[2]+m.mx[2])/2];
+  const span = Math.max(...m.dims) || 1, k = 300 / span;
+  const cs = getComputedStyle(document.documentElement);
+  const acc = cs.getPropertyValue('--accent').trim(), ink = cs.getPropertyValue('--ink').trim();
+  const ca = Math.cos(a), sa = Math.sin(a), tilt = 0.55, ct = Math.cos(tilt), st = Math.sin(tilt);
+  const proj = new Float32Array(n * 9), order = new Array(n);
+  for (let i = 0; i < n * 3; i++){
+    const x = t[i*3]-c[0], y = t[i*3+1]-c[1], z = t[i*3+2]-c[2];
+    const X = x*ca - y*sa, Y = x*sa + y*ca, Y2 = Y*ct - z*st, Z2 = Y*st + z*ct;
+    proj[i*3] = 320 + X*k; proj[i*3+1] = 240 - Z2*k; proj[i*3+2] = Y2;
+  }
+  for (let i = 0; i < n; i++) order[i] = i;
+  order.sort((p, q) => (proj[q*9+2]+proj[q*9+5]+proj[q*9+8]) - (proj[p*9+2]+proj[p*9+5]+proj[p*9+8]));
+  ctx.fillStyle = acc; ctx.strokeStyle = ink; ctx.lineWidth = 0.4;
+  for (const i of order){
+    const o = i*9, ux = proj[o+3]-proj[o], uy = proj[o+4]-proj[o+1], wx = proj[o+6]-proj[o], wy = proj[o+7]-proj[o+1];
+    const facing = ux*wy - uy*wx;
+    ctx.beginPath(); ctx.moveTo(proj[o], proj[o+1]); ctx.lineTo(proj[o+3], proj[o+4]); ctx.lineTo(proj[o+6], proj[o+7]); ctx.closePath();
+    ctx.globalAlpha = facing < 0 ? 0.55 : 0.22; ctx.fill(); ctx.globalAlpha = 0.35; ctx.stroke();
+  }
+  ctx.globalAlpha = 1;
+}
+
+/* bindings */
+function bindBuyer(){
+  document.querySelectorAll('[data-go]').forEach(el => el.addEventListener('click', e => { e.preventDefault(); go(el.dataset.go); }));
+  document.querySelectorAll('[data-scen]').forEach(el => el.addEventListener('click', () => {
+    S.scen = el.dataset.scen; const sc = SCEN[S.scen]; S.material = sc.material; S.measured = false; S.uploadMsg = '';
+    S.dec = {threads:!!sc.threads, tight:false, drawing:false, own:false}; S.qty = sc.dxf?1:10; go('measure');
+  }));
+  const fi = $('#fileIn'); if (fi) fi.onchange = () => takeFile(fi.files[0]);
+  const dz = $('#dropzone');
+  if (dz){
+    dz.addEventListener('dragover', e => { e.preventDefault(); dz.style.borderColor = 'var(--accent)'; });
+    dz.addEventListener('dragleave', () => { dz.style.borderColor = ''; });
+    dz.addEventListener('drop', e => { e.preventDefault(); dz.style.borderColor = ''; takeFile(e.dataTransfer.files[0]); });
+  }
+  document.querySelectorAll('input[name="units"]').forEach(r => r.onchange = () => { S.upload.units = r.value; applyUnits(); render(); });
+  if (S.step === 'measure') runMeasure();
+  const mat=$('#mat'); if (mat) mat.onchange = () => { S.material = mat.value; };
+  const qty=$('#qty'); if (qty) qty.onchange = () => { S.qty = +qty.value; };
+  const ctry=$('#country'); if (ctry) ctry.onchange = () => { S.country = ctry.value; };
+  document.querySelectorAll('[data-dec]').forEach(el => el.onchange = () => { S.dec[el.dataset.dec] = el.checked; });
+  const em=$('#email'); if (em) em.oninput = () => { S.email = em.value; };
+  const send=$('#send'); if (send) send.onclick = () => { S.codeSent = true; render(); };
+  const ver=$('#verify'); if (ver) ver.onclick = () => { const c=$('#code'); if (c.value.trim()==='482913'){ S.verified = true; render(); } else { c.setCustomValidity('That code does not match. Use the sample code shown.'); c.reportValidity(); } };
+  const at=$('#attest'); if (at) at.onchange = () => { S.attest = at.checked; render(); };
+  const gp=$('#getPrice'); if (gp) gp.onclick = () => { S.terms=false; S.payState='idle'; S.hold=900; go('result'); startHold(); };
+  const tm=$('#terms'); if (tm) tm.onchange = () => { S.terms = tm.checked; render(); };
+  const pay=$('#pay'); if (pay) pay.onclick = () => { S.payState='working'; render(); setTimeout(()=>{ S.payState='ready'; render(); }, reduce?50:1300); };
+  const tc=$('#toCheckout'); if (tc) tc.onclick = () => go('checkout');
+  document.querySelectorAll('[data-qty]').forEach(b => b.onclick = () => { S.qty = +b.dataset.qty; S.payState = 'idle'; S.terms = false; render(); });
+  const pn=$('#payNow'); if (pn) pn.onclick = placeOrder;
+  const sr=$('#sendReq'); if (sr) sr.onclick = sendRequest;
+  const ss=$('#seeShop'); if (ss) ss.onclick = () => { S.view='shop'; S.shopTab='queue'; S.selOrder=S.orders[S.orders.length-1].id; render(); };
+  const sh=$('#seeShopH'); if (sh) sh.onclick = () => { S.view='shop'; S.shopTab='queue'; render(); };
+  const ag=$('#again'); if (ag) ag.onclick = () => { S.codeSent=S.codeSent; go('upload'); };
+}
+function go(step){ S.step = step; if (step!=='result') stopHold(); render(); window.scrollTo({top:0, behavior: reduce?'auto':'smooth'}); }
+function startHold(){ stopHold(); S.holdTimer = setInterval(()=>{ if (S.step!=='result'){stopHold();return;} S.hold = Math.max(0,S.hold-1); const h=document.querySelector('.hint.mono'); if(h){ const mm=Math.floor(S.hold/60), ss=String(S.hold%60).padStart(2,'0'); h.textContent='Price held for '+mm+':'+ss+'. After you click Pay, you have 24 hours to finish checkout.'; } }, 1000); }
+function stopHold(){ clearInterval(S.holdTimer); S.holdTimer=null; }
+function placeOrder(){
+  const t = totals(), sc = SCEN[S.scen], id = S.nextOrder++;
+  const paidAt = new Date();
+  S.orders.push({id, part:sc.title, material:S.material, qty:S.qty, total:t.sub, email:S.email, status:'review', due:addBusinessDays(paidAt,1), paidAt, risk:'Low', match:true, dims:sc.dims, vol:sc.vol, holes:sc.holes, file:sc.file});
+  S.log.unshift({t:now(), m:'Order #'+id+' paid, '+money(t.sub)+'. Review due '+fmtDate(addBusinessDays(paidAt,1))+'.'});
+  go('done');
+}
+function sendRequest(){
+  const g = gate(), sc = SCEN[S.scen], id = 'HQ-' + (S.nextHQ++);
+  const silent = sc.dxf ? null : g.total;
+  S.hand.push({id, part:sc.title+', '+S.materials[S.material].name, reason:g.reasons[0], silent});
+  S.log.unshift({t:now(), m:'Quote request '+id+' received. '+(silent?'Practice price logged: '+money(silent)+'.':'No automatic price (2D drawing).')});
+  go('requested');
+}
+
+/* shop view */
+function stateLabel(s){ return s==='on'?'<span class="pill on">Live</span>':s==='practice'?'<span class="pill practice">Practice</span>':'<span class="pill paused">Paused</span>'; }
+function shop(){
+  const tabs = [['queue','Review queue'],['rates','Rate card'],['log','Activity']].map(([k,t])=>'<button role="tab" data-tab="'+k+'" aria-selected="'+(S.shopTab===k)+'">'+t+'</button>').join('');
+  const body = S.shopTab==='queue'?queue():S.shopTab==='rates'?rates():activity();
+  return '<div class="sitehead"><div class="brand">'+LOGO+'Shop dashboard</div><span class="hint">Staff only · sign-in required</span></div>'
+   + (S.paused?'<div class="screen" style="padding-bottom:0"><div class="notice warn"><b>Instant pay is paused.</b> '+S.pauseReason+' Buyers get the "quote from our team" path until you turn it back on. <button class="btn small ghost" id="unpause" style="margin-left:8px">Turn instant pay back on</button></div></div>':'')
+   + '<div class="tabs" role="tablist">'+tabs+'</div><div class="screen">'+body+'</div>';
+}
+function queue(){
+  const open = S.orders.filter(o=>o.status==='review');
+  const rows = S.orders.slice().reverse().map(o=>{
+    const st = o.status==='review'?'<span class="pill practice">Needs review</span>':o.status==='approved'?'<span class="pill on">Approved</span>':'<span class="pill bad">Refunded</span>';
+    return '<tr data-order="'+o.id+'" class="'+(S.selOrder===o.id?'sel':'')+'" style="cursor:pointer"><td class="num">#'+o.id+'</td><td>'+o.part+'<br><span class="hint">'+S.materials[o.material].name+' · qty '+o.qty+'</span></td><td class="num">'+money(o.total)+'</td><td>'+st+'</td><td class="num">'+(o.status==='review'?fmtDate(o.due):'—')+'</td></tr>';
+  }).join('');
+  const hq = S.hand.slice().reverse().map(h=>{
+    let act;
+    if (h.sent) act = '<span class="pill on">Sent '+money(h.teamPrice)+'</span>'+(h.silent?'<br><span class="hint">Gap vs practice price: '+(h.gap>=0?'+':'')+h.gap.toFixed(1)+'%</span>':'');
+    else act = '<div class="hqprice"><input type="text" inputmode="decimal" id="hp-'+h.id+'" placeholder="Your price" aria-label="Your price for '+h.id+'"><button class="btn small ghost" data-send="'+h.id+'">Send quote</button></div>';
+    return '<tr><td class="num">'+h.id+'</td><td>'+h.part+'<br><span class="hint">'+h.reason+'</span></td><td class="num">'+(h.sent?(h.silent?money(h.silent):'—'):'hidden until sent')+'</td><td>'+act+'</td></tr>';
+  }).join('');
+  return '<div class="stack"><div class="stats"><div class="stat"><span class="label">To review</span><b>'+open.length+'</b></div><div class="stat"><span class="label">Open reviews</span><b>'+open.length+' of '+S.openCap+'</b></div><div class="stat"><span class="label">Hand quotes waiting</span><b>'+S.hand.filter(h=>!h.sent).length+'</b></div><div class="stat"><span class="label">Instant pay</span><b>'+(S.paused?'Paused':'On')+'</b></div></div>'
+   + '<div class="grid2"><div class="stack"><h3>Instant orders</h3><div class="tablewrap"><table class="q"><thead><tr><th>Order</th><th>Part</th><th>Total</th><th>Status</th><th>Review by</th></tr></thead><tbody>'+rows+'</tbody></table></div>'
+   + '<button class="btn small ghost" id="overdue">Simulate an overdue review</button></div>'
+   + '<div>'+reviewPanel()+'</div></div>'
+   + '<div class="stack"><h3>Quote requests for the team</h3><p class="hint">The practice price is what the system would have charged. It is logged to compare against your price and is not shown to the person quoting.</p><div class="tablewrap"><table class="q"><thead><tr><th>Request</th><th>Part</th><th>Practice price</th><th></th></tr></thead><tbody>'+hq+'</tbody></table></div></div></div>';
+}
+function reviewPanel(){
+  const o = S.orders.find(x=>x.id===S.selOrder);
+  if (!o) return '<div class="panel"><p class="muted">Pick an order to review it.</p></div>';
+  const m = S.materials[o.material];
+  let actions;
+  if (o.status==='review') actions = '<div class="field"><label for="why">If you reject, why</label><select id="why"><option value="price">Price is wrong beyond your limit</option><option value="make">Can\'t be made as submitted</option><option value="forged">File doesn\'t match the measurements</option><option value="prohibited">A part we don\'t make</option><option value="fraud">Payment looks risky</option><option value="buyer">Buyer asked to cancel</option></select></div><div class="row"><button class="btn good" id="approve">Approve for production</button><button class="btn bad" id="reject">Reject and refund</button></div>';
+  else if (o.status==='approved') actions = '<div class="notice good">Approved '+(o.when||'')+'. Ready for production.</div>';
+  else actions = '<div class="notice bad">Cancelled. '+o.refundNote+'</div>';
+  return '<div class="panel stack"><div class="row" style="justify-content:space-between"><h3>Order #'+o.id+'</h3>'+(o.status==='review'?'<span class="hint">Review by '+fmtDate(o.due)+'</span>':'')+'</div>'
+   + '<dl class="kv"><dt>Part</dt><dd>'+o.part+'</dd>'+(o.file?'<dt>File</dt><dd>'+o.file+'</dd>':'')+'<dt>Material, qty</dt><dd>'+m.name+', '+o.qty+'</dd><dt>Total (before tax)</dt><dd>'+money(o.total)+'</dd><dt>Buyer</dt><dd>'+o.email+'</dd>'
+   + (o.dims?'<dt>Size (in)</dt><dd>'+o.dims.map(d=>d.toFixed(3)).join(' × ')+'</dd><dt>Metal volume</dt><dd>'+o.vol.toFixed(2)+' in³</dd><dt>Through-holes</dt><dd>'+o.holes+'</dd>':'')+'</dl>'
+   + '<div class="stack-s"><span class="label">Checks</span>'
+   + '<div class="row"><span class="pill on">Match</span><span>Re-measured file matches what the buyer\'s browser sent</span></div>'
+   + '<div class="row"><span class="pill on">'+o.risk+'</span><span>Payment risk from the checkout</span></div>'
+   + '<div class="row"><span class="pill on">OK</span><span>Price per part is in your usual range</span></div></div>'
+   + actions + '</div>';
+}
+function rates(){
+  const rows = Object.entries(S.materials).map(([k,m])=>{
+    const btn = (s,t)=>'<button data-mat="'+k+'" data-state="'+s+'" aria-pressed="'+(m.state===s)+'"'+(s==='on'&&!m.gate?' disabled title="Needs 12 simple past jobs that pass the price check"':'')+'>'+t+'</button>';
+    return '<tr><td><b>'+m.name+'</b></td><td class="num">'+money(m.lb)+'/lb<br><span class="hint">'+m.date+'</span></td><td class="num">'+m.jobs+' of 12</td><td>'+(m.gate?'<span class="pill on">Passed</span>':'<span class="pill practice">Not yet</span>')+'</td><td>'+stateLabel(m.state)+'</td><td><span class="statebtns">'+btn('on','Live')+btn('practice','Practice')+btn('paused','Paused')+'</span></td></tr>';
+  }).join('');
+  const steps = [500,1000,2500].map(v=>v===S.cap?'<b>'+money(v)+'</b>':money(v)).join(' → ');
+  return '<div class="stack"><div class="stack-s"><h3>Materials</h3><p class="hint">Live: buyers get an instant price. Practice: the system prices silently and logs it next to your team\'s quote. Paused: stopped. A material can go Live only after 12 of your simple past jobs price within your band.</p></div>'
+   + '<div class="tablewrap"><table class="q"><thead><tr><th>Material</th><th>Metal price</th><th>Past jobs</th><th>Price check</th><th>State</th><th>Set state</th></tr></thead><tbody>'+rows+'</tbody></table></div>'
+   + '<div class="row"><button class="btn small ghost" id="edit6061">Update the 6061 metal price</button><span class="hint" id="editNote">Any price edit pauses that material and re-checks your 12 past jobs.</span></div>'
+   + '<div class="grid2"><div class="panel stack-s"><h3>Instant pay limits</h3><dl class="kv"><dt>Largest instant order</dt><dd>'+money(S.cap)+'</dd><dt>Largest quantity</dt><dd>'+S.maxQty+'</dd><dt>Paid instant orders per day</dt><dd>'+S.perDay+'</dd><dt>Open reviews before new buyers go to your team</dt><dd>'+S.openCap+'</dd></dl></div>'
+   + '<div class="panel stack-s"><h3>Order limit steps</h3><p class="mono">'+steps+'</p><p class="hint">Each step up after 5 clean reviews, and you flip it. '+S.rampDone+' of 5 clean reviews at this step.</p><div class="row"><button class="btn small ghost" id="pauseAll">'+(S.paused?'Instant pay is paused':'Pause all instant pay')+'</button></div></div></div></div>';
+}
+function activity(){
+  return '<div class="stack"><h3>Activity</h3><p class="hint">Every price change, pause, approval and refund is recorded, with who did it. You get an email for each price change and refund.</p><ul class="log">'+S.log.map(l=>'<li><time>'+l.t+'</time><span>'+l.m+'</span></li>').join('')+'</ul></div>';
+}
+function bindShop(){
+  document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{ S.shopTab=b.dataset.tab; render(); });
+  document.querySelectorAll('[data-order]').forEach(r=>r.onclick=()=>{ S.selOrder=+r.dataset.order; render(); });
+  const ap=$('#approve'); if(ap) ap.onclick=()=>{ const o=S.orders.find(x=>x.id===S.selOrder); o.status='approved'; o.when=now(); S.rampDone=Math.min(5,S.rampDone+1); S.log.unshift({t:now(), m:'Order #'+o.id+' approved by the reviewer.'}); render(); };
+  const rj=$('#reject'); if(rj) rj.onclick=()=>{ const o=S.orders.find(x=>x.id===S.selOrder); const why=$('#why'); const txt=why.options[why.selectedIndex].text; o.status='rejected';
+    const fee = Math.round((o.total*0.027+0.30)*100)/100;
+    o.refundNote = why.value==='buyer' ? 'Refunded '+money(o.total-fee)+' (total less the '+money(fee)+' card fee, per the terms). Buyer emailed once.' : 'Refunded in full, '+money(o.total)+'. Buyer emailed once.';
+    S.log.unshift({t:now(), m:'Order #'+o.id+' rejected: '+txt+'. '+o.refundNote}); render(); };
+  const od=$('#overdue'); if(od) od.onclick=()=>{ const o=S.orders.find(x=>x.status==='review'); S.paused=true; S.pauseReason = o ? 'Order #'+o.id+' went past its review deadline. The buyer was told and offered a free cancel.' : 'A review went past its deadline.'; S.log.unshift({t:now(), m:'Instant pay paused automatically: '+S.pauseReason}); render(); };
+  const up=$('#unpause'); if(up) up.onclick=()=>{ const o=S.orders.find(x=>x.status==='review'); if(o && S.pauseReason.includes('#'+o.id)){ S.shopTab='queue'; S.selOrder=o.id; const n=document.querySelector('.notice.warn'); render(); const w=document.querySelector('.notice.warn'); if(w) w.insertAdjacentHTML('beforeend','<p style="margin-top:8px">Review order #'+o.id+' first. Instant pay turns back on after the overdue order is reviewed.</p>'); return; } S.paused=false; S.pauseReason=''; S.log.unshift({t:now(), m:'Instant pay turned back on by the owner.'}); render(); };
+  document.querySelectorAll('[data-mat]').forEach(b=>b.onclick=()=>{ const m=S.materials[b.dataset.mat]; if(b.disabled) return; m.state=b.dataset.state; S.log.unshift({t:now(), m:m.name+' set to '+(m.state==='on'?'Live':m.state==='practice'?'Practice':'Paused')+' by the owner.'}); render(); });
+  const ed=$('#edit6061'); if(ed) ed.onclick=()=>{ const m=S.materials.al6061; const prev=m.state; m.lb=3.25; m.date='today'; m.state='paused'; S.log.unshift({t:now(), m:'6061 metal price changed to $3.25/lb. 6061 paused while past jobs are re-checked.'}); render(); const n=$('#editNote'); if(n) n.textContent='Re-checking your 12 past jobs…';
+    setTimeout(()=>{ m.state = prev==='paused'?'paused':'on'; S.log.unshift({t:now(), m:'Re-check passed: all 12 past jobs still inside your band. 6061 back to '+(m.state==='on'?'Live':'Paused')+'. Change emailed to the owner.'}); render(); const n2=$('#editNote'); if(n2) n2.textContent='Re-check passed in seconds. 6061 is back to Live.'; }, reduce?100:1600); };
+  const pa=$('#pauseAll'); if(pa) pa.onclick=()=>{ if(S.paused) return; S.paused=true; S.pauseReason='Paused by the owner.'; S.log.unshift({t:now(), m:'All instant pay paused by the owner.'}); render(); };
+  document.querySelectorAll('[data-send]').forEach(b=>b.onclick=()=>{ const id=b.dataset.send, h=S.hand.find(x=>x.id===id), inp=$('#hp-'+id);
+    const v = parseFloat((inp.value||'').replace(/[$,]/g,''));
+    if (!(v > 0)){ inp.setCustomValidity('Enter your price in dollars, for example 480'); inp.reportValidity(); return; }
+    h.sent = true; h.teamPrice = v; h.gap = h.silent ? (h.silent - v) / v * 100 : 0;
+    S.log.unshift({t:now(), m:'Quote '+id+' sent at '+money(v)+' with a pay link.'+(h.silent?' Practice price was '+money(h.silent)+' ('+(h.gap>=0?'+':'')+h.gap.toFixed(1)+'%). Added to the calibration log.':'')}); render(); });
+}
+
+$('#vBuyer').onclick=()=>{ S.view='buyer'; render(); };
+$('#vShop').onclick=()=>{ S.view='shop'; if(!S.selOrder) S.selOrder=S.orders[0].id; render(); };
+S.selOrder = 1041;
+render();
+})();
+</script>
+</body>
+</html>
