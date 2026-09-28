@@ -530,6 +530,29 @@ h4,.label{font-size:14px;font-weight:700;color:var(--ink-2)}
 .actbar{box-shadow:none;border-top:1px solid var(--line)}
 .dimlab{box-shadow:none;border-color:#D7E4F1;color:#4F79A8}
 .grid-paper{background-image:radial-gradient(var(--gridmajor) 1px,transparent 1.3px)}
+
+/* ---- always the white look, whatever the device's dark-mode setting ---- */
+:root{color-scheme:light;
+  --bg:#FFFFFF; --surface:#FFFFFF; --panel:#F8FAFD; --sunk:#F3F6FA; --ink:#243A66; --ink-2:#3B4E77; --muted:#7784A0; --line:#E5EAF1; --line-2:#F0F3F7;
+  --accent:#F47C3C; --accent-hi:#F68B50; --accent-ink:#FFFFFF; --accent-soft:#FEF1E8; --sel:#243A66; --sel-soft:#F3F7FD;
+  --go:#18794E; --go-soft:#E3F4EA; --warn:#915800; --warn-soft:#FCEFD6; --bad:#B12217; --bad-soft:#F8DEDA;
+  --plate:#16233A; --plate-2:#1F3150; --plate-ink:#F3F6FA; --plate-muted:#AFBCD0; --plate-line:#2E4264;
+  --viewer:#FFFFFF; --gridline:#EEF2F7; --gridmajor:#E6ECF3; --pencil:#F47C3C;
+  --shadow:0 1px 2px rgba(36,58,102,.04),0 8px 28px rgba(36,58,102,.06);}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){color-scheme:light;
+  --bg:#FFFFFF; --surface:#FFFFFF; --panel:#F8FAFD; --sunk:#F3F6FA; --ink:#243A66; --ink-2:#3B4E77; --muted:#7784A0; --line:#E5EAF1; --line-2:#F0F3F7;
+  --accent:#F47C3C; --accent-hi:#F68B50; --accent-ink:#FFFFFF; --accent-soft:#FEF1E8; --sel:#243A66; --sel-soft:#F3F7FD;
+  --go:#18794E; --go-soft:#E3F4EA; --warn:#915800; --warn-soft:#FCEFD6; --bad:#B12217; --bad-soft:#F8DEDA;
+  --plate:#16233A; --plate-2:#1F3150; --plate-ink:#F3F6FA; --plate-muted:#AFBCD0; --plate-line:#2E4264;
+  --viewer:#FFFFFF; --gridline:#EEF2F7; --gridmajor:#E6ECF3; --pencil:#F47C3C;
+  --shadow:0 1px 2px rgba(36,58,102,.04),0 8px 28px rgba(36,58,102,.06);}}
+:root[data-theme="dark"]{color-scheme:light;
+  --bg:#FFFFFF; --surface:#FFFFFF; --panel:#F8FAFD; --sunk:#F3F6FA; --ink:#243A66; --ink-2:#3B4E77; --muted:#7784A0; --line:#E5EAF1; --line-2:#F0F3F7;
+  --accent:#F47C3C; --accent-hi:#F68B50; --accent-ink:#FFFFFF; --accent-soft:#FEF1E8; --sel:#243A66; --sel-soft:#F3F7FD;
+  --go:#18794E; --go-soft:#E3F4EA; --warn:#915800; --warn-soft:#FCEFD6; --bad:#B12217; --bad-soft:#F8DEDA;
+  --plate:#16233A; --plate-2:#1F3150; --plate-ink:#F3F6FA; --plate-muted:#AFBCD0; --plate-line:#2E4264;
+  --viewer:#FFFFFF; --gridline:#EEF2F7; --gridmajor:#E6ECF3; --pencil:#F47C3C;
+  --shadow:0 1px 2px rgba(36,58,102,.04),0 8px 28px rgba(36,58,102,.06);}
 </style>
 
 <div class="wrap">
