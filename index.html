@@ -650,6 +650,66 @@ h4,.label{font-size:14px;font-weight:700;color:var(--ink-2)}
 .seg button[aria-pressed="true"]{background:var(--ink-blue)}
 .tabs button[aria-selected="true"]{color:var(--ink-blue)}
 .stat:nth-child(odd){background:var(--b1)} .stat:nth-child(even){background:var(--o1)}
+
+/* ---- two tints only: one blue, one orange; no green ---- */
+:root{--blue:#2F6DB5; --btint:#EAF2FD; --bline:#CFE1F7; --otint:#FEEEE3; --oline:#F8C9A8;
+  --b1:var(--btint); --b2:var(--btint); --b3:var(--btint); --b4:var(--bline); --o1:var(--otint); --o2:var(--otint); --o3:var(--oline); --o4:var(--oline);
+  --tint-blue:var(--btint); --tint-orange:var(--otint); --tint-green:var(--btint); --ink-green:var(--blue); --ink-blue:var(--blue);
+  --go:var(--blue); --go-soft:var(--btint); --sel-soft:var(--btint); --accent-soft:var(--otint);
+  --panel:#FFFFFF; --sunk:var(--btint); --viewer:#FFFFFF; --gridline:#E3ECF7; --gridmajor:#DCE6F2; --line:#E3E9F1; --line-2:#EEF2F7;}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--blue:#2F6DB5; --btint:#EAF2FD; --bline:#CFE1F7; --otint:#FEEEE3; --oline:#F8C9A8;
+  --b1:var(--btint); --b2:var(--btint); --b3:var(--btint); --b4:var(--bline); --o1:var(--otint); --o2:var(--otint); --o3:var(--oline); --o4:var(--oline);
+  --tint-blue:var(--btint); --tint-orange:var(--otint); --tint-green:var(--btint); --ink-green:var(--blue); --ink-blue:var(--blue);
+  --go:var(--blue); --go-soft:var(--btint); --sel-soft:var(--btint); --accent-soft:var(--otint);
+  --panel:#FFFFFF; --sunk:var(--btint); --viewer:#FFFFFF; --gridline:#E3ECF7; --gridmajor:#DCE6F2; --line:#E3E9F1; --line-2:#EEF2F7;}}
+:root[data-theme="dark"]{--blue:#2F6DB5; --btint:#EAF2FD; --bline:#CFE1F7; --otint:#FEEEE3; --oline:#F8C9A8;
+  --b1:var(--btint); --b2:var(--btint); --b3:var(--btint); --b4:var(--bline); --o1:var(--otint); --o2:var(--otint); --o3:var(--oline); --o4:var(--oline);
+  --tint-blue:var(--btint); --tint-orange:var(--otint); --tint-green:var(--btint); --ink-green:var(--blue); --ink-blue:var(--blue);
+  --go:var(--blue); --go-soft:var(--btint); --sel-soft:var(--btint); --accent-soft:var(--otint);
+  --panel:#FFFFFF; --sunk:var(--btint); --viewer:#FFFFFF; --gridline:#E3ECF7; --gridmajor:#DCE6F2; --line:#E3E9F1; --line-2:#EEF2F7;}
+#examples{background:var(--surface)}
+.ex:nth-child(2) .body{background:var(--surface)}
+.facts div:nth-child(1){background:var(--btint)} .facts div:nth-child(3){background:var(--btint)}
+.steps4 > div:nth-child(3){background:var(--btint)}
+.foot.brushed{background:var(--ink)}
+.sheet{border-color:var(--bline)}
+.sheet-view{background-color:var(--surface)}
+.pill.on,.pill.go{background:var(--btint);color:var(--blue)}
+.btn.go{background:var(--blue);color:#fff}
+.chip:nth-child(3n){background:var(--btint)}
+.stat:nth-child(odd){background:var(--btint)} .stat:nth-child(even){background:var(--otint)}
+.mat .st.i{background:var(--otint);color:var(--ink-orange)}
+.mat .st.q{background:var(--btint);color:var(--blue)}
+
+/* ---- one orange only ---- */
+:root{--orange:#E8602A; --accent:var(--orange); --accent-hi:var(--orange); --ink-orange:var(--orange); --pencil:var(--orange);
+  --otint:var(--btint); --oline:var(--bline); --o1:var(--btint); --o2:var(--btint); --o3:var(--bline); --o4:var(--bline);
+  --tint-orange:var(--btint); --accent-soft:var(--btint); --warn:var(--blue); --warn-soft:var(--btint);}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--orange:#E8602A; --accent:var(--orange); --accent-hi:var(--orange); --ink-orange:var(--orange); --pencil:var(--orange);
+  --otint:var(--btint); --oline:var(--bline); --o1:var(--btint); --o2:var(--btint); --o3:var(--bline); --o4:var(--bline);
+  --tint-orange:var(--btint); --accent-soft:var(--btint); --warn:var(--blue); --warn-soft:var(--btint);}}
+:root[data-theme="dark"]{--orange:#E8602A; --accent:var(--orange); --accent-hi:var(--orange); --ink-orange:var(--orange); --pencil:var(--orange);
+  --otint:var(--btint); --oline:var(--bline); --o1:var(--btint); --o2:var(--btint); --o3:var(--bline); --o4:var(--bline);
+  --tint-orange:var(--btint); --accent-soft:var(--btint); --warn:var(--blue); --warn-soft:var(--btint);}
+.btn:hover,.navlinks .cta:hover{filter:brightness(.95)}
+.hero .plate-label{background:var(--orange);color:#fff}
+.facts div:nth-child(2){background:var(--btint)} .facts div:nth-child(2) b{color:var(--orange)}
+.steps4 > div:nth-child(2){background:var(--btint)} .steps4 > div:nth-child(2) .n{color:var(--orange)}
+.pricetag{background:var(--surface);border-top:1px solid var(--bline)}
+.dropbig.herodrop{background:var(--surface);border-color:var(--orange)}
+.dropbig.herodrop:hover,.dropbig.herodrop.over{background:var(--btint)}
+.filetypes span{background:var(--surface);border-color:var(--bline);color:var(--blue)}
+.dots li.now i{background:var(--orange);border-color:var(--orange);box-shadow:none}
+.mat[aria-pressed="true"],.opt:has(input:checked){border-color:var(--orange);background:var(--btint)}
+.mat .st.i{background:var(--orange);color:#fff}
+.bigprice{background:var(--btint)}
+.ladder2 tr.cur td{background:var(--btint);color:var(--orange)}
+.chip:nth-child(odd){background:var(--btint)}
+.fileicons span:nth-child(odd){background:var(--surface);border-color:var(--bline);color:var(--blue)}
+.stat:nth-child(even){background:var(--btint)}
+.mockchip{background:var(--btint);color:var(--blue)}
+.unitshint{color:var(--orange)}
+.foot .plate-label{color:var(--orange)}
 </style>
 
 <div class="wrap">
@@ -882,7 +942,7 @@ class Viewer{
     if (this.zoomEl) this.zoomEl.oninput = () => this.setZoom(+this.zoomEl.value);
     this.theme(); this.resize(); this.syncLabels(); this.draw(); this.syncZoom();
   }
-  theme(){ const dark = this.isDark(); this.edgeMat.color.set(dark ? 0xCFE0F3 : 0x3E74B0); this.dimMat.color.set(dark ? 0xFF7A55 : 0xF28A57); }
+  theme(){ const dark = this.isDark(); this.edgeMat.color.set(dark ? 0xCFE0F3 : 0x3E74B0); this.dimMat.color.set(dark ? 0xE8602A : 0xE8602A); }
   kick(){ if (this.running) return; this.running = true; requestAnimationFrame(this.loop); }
   loop(){
     if (!this.host || !document.body.contains(this.host)){ this.running = false; return; }
