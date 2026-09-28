@@ -553,6 +553,40 @@ h4,.label{font-size:14px;font-weight:700;color:var(--ink-2)}
   --plate:#16233A; --plate-2:#1F3150; --plate-ink:#F3F6FA; --plate-muted:#AFBCD0; --plate-line:#2E4264;
   --viewer:#FFFFFF; --gridline:#EEF2F7; --gridmajor:#E6ECF3; --pencil:#F47C3C;
   --shadow:0 1px 2px rgba(36,58,102,.04),0 8px 28px rgba(36,58,102,.06);}
+
+/* ---- a little more color ---- */
+:root{--accent:#F26A2E; --accent-hi:#F57C45; --accent-soft:#FEEBDD; --sel-soft:#EAF3FE; --panel:#F4F8FD; --sunk:#EEF4FB;
+  --viewer:#F5F9FE; --gridline:#E4ECF6; --gridmajor:#D5E1EF; --pencil:#F26A2E; --line:#E0E7F0;
+  --tint-blue:#EAF3FE; --tint-orange:#FEF0E6; --tint-green:#E7F6EE; --ink-blue:#2F6DB5; --ink-orange:#C4531F; --ink-green:#1E7A4C;}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--accent:#F26A2E; --accent-hi:#F57C45; --accent-soft:#FEEBDD; --sel-soft:#EAF3FE; --panel:#F4F8FD; --sunk:#EEF4FB;
+  --viewer:#F5F9FE; --gridline:#E4ECF6; --gridmajor:#D5E1EF; --pencil:#F26A2E; --line:#E0E7F0;
+  --tint-blue:#EAF3FE; --tint-orange:#FEF0E6; --tint-green:#E7F6EE; --ink-blue:#2F6DB5; --ink-orange:#C4531F; --ink-green:#1E7A4C;}}
+:root[data-theme="dark"]{--accent:#F26A2E; --accent-hi:#F57C45; --accent-soft:#FEEBDD; --sel-soft:#EAF3FE; --panel:#F4F8FD; --sunk:#EEF4FB;
+  --viewer:#F5F9FE; --gridline:#E4ECF6; --gridmajor:#D5E1EF; --pencil:#F26A2E; --line:#E0E7F0;
+  --tint-blue:#EAF3FE; --tint-orange:#FEF0E6; --tint-green:#E7F6EE; --ink-blue:#2F6DB5; --ink-orange:#C4531F; --ink-green:#1E7A4C;}
+.hero.brushed{background-color:#F2F7FE}
+.hero .plate-label{color:var(--ink-orange)}
+.facts div:nth-child(1){background:var(--tint-blue);border-color:transparent!important}
+.facts div:nth-child(2){background:var(--tint-orange);border-color:transparent!important}
+.facts div:nth-child(3){background:var(--tint-green);border-color:transparent!important}
+.facts div:nth-child(1) b{color:var(--ink-blue)} .facts div:nth-child(2) b{color:var(--ink-orange)} .facts div:nth-child(3) b{color:var(--ink-green)}
+.steps4 > div:nth-child(1){background:var(--tint-blue)} .steps4 > div:nth-child(2){background:var(--tint-orange)} .steps4 > div:nth-child(3){background:var(--tint-green)}
+.steps4 > div:nth-child(1) .n{background:#fff;color:var(--ink-blue)} .steps4 > div:nth-child(2) .n{background:#fff;color:var(--ink-orange)} .steps4 > div:nth-child(3) .n{background:#fff;color:var(--ink-green)}
+#examples{background:#FAFCFF}
+.ex .thumb{background-color:var(--viewer)}
+.dots li:not(:first-child)::before{border-color:#CFE0F4}
+.dots li.done:not(:first-child)::before,.dots li.now:not(:first-child)::before{border-color:var(--ink-blue)}
+.dots li.done i{background:var(--ink-blue);border-color:var(--ink-blue)}
+.dots i{border-color:#CFE0F4;color:var(--ink-blue)}
+.mat .st.i{color:var(--ink-green);background:var(--tint-green);padding:4px 8px;border-radius:999px}
+.mat .st.q{color:var(--ink-blue);background:var(--tint-blue);padding:4px 8px;border-radius:999px}
+.okline{background:var(--tint-green);color:var(--ink-green);padding:10px 12px;border-radius:12px}
+.notice.info{background:var(--tint-blue);color:var(--ink-blue)}
+.pricebox{background:linear-gradient(180deg,#fff,#FAFCFF)}
+.ladder2 tr.cur td{background:var(--tint-orange);color:var(--ink-orange)}
+.pricetag b{color:var(--ink)}
+.chip:nth-child(3n+1){background:var(--tint-blue)} .chip:nth-child(3n+2){background:var(--tint-orange)} .chip:nth-child(3n){background:var(--tint-green)}
+.unitshint{font-size:14px;color:var(--ink-orange);margin:0}
 </style>
 
 <div class="wrap">
@@ -646,11 +680,11 @@ function loadSamples(){
 
 /* ---------- state ---------- */
 const MATS = {
-  al6061:{bp:0xDCEAF7, name:'6061-T6 aluminum', short:'6061 aluminum', desc:'Strong, light, machines clean', lb:3.10, date:'Sep 15', jobs:12, inBand:11, state:'on', factor:1.00, density:0.0975, color:0xC9CED4, metal:.55, rough:.36, sw:'linear-gradient(135deg,#eef1f4 0%,#c3cad2 45%,#f4f6f8 60%,#b7bfc8 100%)'},
-  al7075:{bp:0xD3E3F3, name:'7075-T6 aluminum', short:'7075 aluminum', desc:'Highest strength aluminum', lb:5.40, date:'Sep 15', jobs:7, inBand:6, state:'practice', factor:1.28, density:0.101, color:0xC0C6CD, metal:.55, rough:.34, sw:'linear-gradient(135deg,#e2e6ea 0%,#aeb7c1 45%,#e9ecef 60%,#a3acb6 100%)'},
-  ss304:{bp:0xDDE3EA, name:'304 stainless', short:'304 stainless', desc:'Corrosion resistant, tough', lb:2.90, date:'Sep 12', jobs:4, inBand:3, state:'practice', factor:1.85, density:0.289, color:0xAEB4B9, metal:.7, rough:.28, sw:'linear-gradient(135deg,#d9dde1 0%,#9aa2aa 45%,#e1e4e7 60%,#8e969e 100%)'},
-  st1018:{bp:0xC9D2DD, name:'1018 steel', short:'1018 steel', desc:'Low carbon, weldable', lb:1.10, date:'Sep 12', jobs:11, inBand:10, state:'practice', factor:1.35, density:0.284, color:0x80878D, metal:.6, rough:.45, sw:'linear-gradient(135deg,#a9aeb3 0%,#6e757c 45%,#b3b8bc 60%,#636a70 100%)'},
-  delrin:{bp:0xF6F7F9, name:'Delrin (acetal)', short:'Delrin', desc:'Slippery, stable plastic', lb:6.20, date:'Sep 10', jobs:2, inBand:2, state:'practice', factor:0.90, density:0.051, color:0xEFEDE6, metal:0, rough:.7, sw:'linear-gradient(135deg,#ffffff 0%,#ecebe6 60%,#dedcd4 100%)'}
+  al6061:{bp:0xB7D3F1, name:'6061-T6 aluminum', short:'6061 aluminum', desc:'Strong, light, machines clean', lb:3.10, date:'Sep 15', jobs:12, inBand:11, state:'on', factor:1.00, density:0.0975, color:0xC9CED4, metal:.55, rough:.36, sw:'linear-gradient(135deg,#eef1f4 0%,#c3cad2 45%,#f4f6f8 60%,#b7bfc8 100%)'},
+  al7075:{bp:0xA9C8EB, name:'7075-T6 aluminum', short:'7075 aluminum', desc:'Highest strength aluminum', lb:5.40, date:'Sep 15', jobs:7, inBand:6, state:'practice', factor:1.28, density:0.101, color:0xC0C6CD, metal:.55, rough:.34, sw:'linear-gradient(135deg,#e2e6ea 0%,#aeb7c1 45%,#e9ecef 60%,#a3acb6 100%)'},
+  ss304:{bp:0xC4CFDC, name:'304 stainless', short:'304 stainless', desc:'Corrosion resistant, tough', lb:2.90, date:'Sep 12', jobs:4, inBand:3, state:'practice', factor:1.85, density:0.289, color:0xAEB4B9, metal:.7, rough:.28, sw:'linear-gradient(135deg,#d9dde1 0%,#9aa2aa 45%,#e1e4e7 60%,#8e969e 100%)'},
+  st1018:{bp:0xA5B3C4, name:'1018 steel', short:'1018 steel', desc:'Low carbon, weldable', lb:1.10, date:'Sep 12', jobs:11, inBand:10, state:'practice', factor:1.35, density:0.284, color:0x80878D, metal:.6, rough:.45, sw:'linear-gradient(135deg,#a9aeb3 0%,#6e757c 45%,#b3b8bc 60%,#636a70 100%)'},
+  delrin:{bp:0xF1F3F6, name:'Delrin (acetal)', short:'Delrin', desc:'Slippery, stable plastic', lb:6.20, date:'Sep 10', jobs:2, inBand:2, state:'practice', factor:0.90, density:0.051, color:0xEFEDE6, metal:0, rough:.7, sw:'linear-gradient(135deg,#ffffff 0%,#ecebe6 60%,#dedcd4 100%)'}
 };
 const FINISHES = {
   none:{name:'As machined', desc:'Fastest. Standard 125 Ra finish, edges broken.', add:0},
@@ -776,7 +810,7 @@ class Viewer{
       this.view(['right', 'left', 'back', 'front', 'top', 'bottom'][hit.face.materialIndex]);
     });
   }
-  isDark(){ return !['#eaf1f8', '#f4f7fb', '#ffffff'].includes(cssv('--viewer').toLowerCase()); }
+  isDark(){ return !['#eaf1f8', '#f4f7fb', '#ffffff', '#f5f9fe'].includes(cssv('--viewer').toLowerCase()); }
   mount(el){
     if (!HAS3D){ el.insertAdjacentHTML('beforeend', '<div class="vempty">3D preview needs a newer browser. Your file is still measured.</div>'); return; }
     this.host = el; el.prepend(this.renderer.domElement); this.ro.disconnect(); this.ro.observe(el);
@@ -785,7 +819,7 @@ class Viewer{
     if (this.zoomEl) this.zoomEl.oninput = () => this.setZoom(+this.zoomEl.value);
     this.theme(); this.resize(); this.syncLabels(); this.draw(); this.syncZoom();
   }
-  theme(){ const dark = this.isDark(); this.edgeMat.color.set(dark ? 0xCFE0F3 : 0x7FA6CC); this.dimMat.color.set(dark ? 0xFF7A55 : 0xF4A57A); }
+  theme(){ const dark = this.isDark(); this.edgeMat.color.set(dark ? 0xCFE0F3 : 0x3E74B0); this.dimMat.color.set(dark ? 0xFF7A55 : 0xF28A57); }
   kick(){ if (this.running) return; this.running = true; requestAnimationFrame(this.loop); }
   loop(){
     if (!this.host || !document.body.contains(this.host)){ this.running = false; return; }
@@ -1032,7 +1066,7 @@ function configure(){
     const ask = p.unitsAsk;
     panel = `<h3>Confirm the units</h3>
       ${ask ? `<p class="muted">STL files don't store units. Which is right?</p>
-        <div class="opts">${['in', 'mm'].map(u => `<label class="opt big"><input type="radio" name="units" value="${u}" ${p.unitsConfirmed && p.units === u ? 'checked' : ''}><span><b>${u === 'in' ? 'Inches' : 'Millimeters'}</b><small class="mono">${p.raw.map(d => d.toFixed(u === 'in' ? 3 : 1)).join(' × ')} ${u}</small></span><span></span></label>`).join('')}</div>`
+        <div class="opts">${['in', 'mm'].map(u => `<label class="opt big"><input type="radio" name="units" value="${u}" ${p.unitsConfirmed && p.units === u ? 'checked' : ''}><span><b>${u === 'in' ? 'Inches' : 'Millimeters'}</b><small class="mono">${p.raw.map(d => d.toFixed(u === 'in' ? 3 : 1)).join(' × ')} ${u}</small></span><span></span></label>`).join('')}</div>${p.unitsConfirmed ? '' : '<p class="unitshint">Pick inches or millimeters to continue.</p>'}`
       : `<p class="muted">We measured it in your browser.</p>`}
       <dl class="kv" style="margin-top:4px"><dt>Size</dt><dd>${p.dims.map(nice).join(' × ')} in</dd><dt>Holes</dt><dd>${p.holes}</dd><dt>Pieces in the file</dt><dd>${p.bodies}</dd></dl>`;
   } else if (S.cstep === 'material'){
