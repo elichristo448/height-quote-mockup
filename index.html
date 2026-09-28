@@ -293,7 +293,28 @@ dl{margin:0}
 .hqprice{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
 .hqprice input{width:110px;border:1px solid var(--ink);border-radius:2px;padding:5px 8px;background:var(--surface)}
 .footnote{margin-top:14px;font-size:13px;color:var(--muted)}
-@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+.sheet{background:var(--surface);color:var(--ink);border:1.5px solid var(--plate-muted);box-shadow:8px 8px 0 rgba(0,0,0,.18)}
+.sheet-view{position:relative;aspect-ratio:16/9;max-width:100%;overflow:hidden;border-bottom:1.5px solid var(--ink)}
+.sheet-view > canvas.main{display:block;width:100%!important;height:100%!important;cursor:grab;touch-action:none}
+.sheet-view .vhint{left:12px;top:10px}
+.titleblk{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+.titleblk div{padding:7px 10px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);min-width:0}
+.titleblk div:nth-child(3n){border-right:0}
+.titleblk div:nth-last-child(-n+3){border-bottom:0}
+.titleblk dt{font:600 9.5px/1.2 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.titleblk dd{margin:3px 0 0;font:600 14px/1.2 var(--mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.titleblk dd.red{color:var(--pencil)}
+.herodrop{margin-top:14px;min-height:0;padding:16px;flex-direction:row;flex-wrap:wrap;gap:10px 16px}
+.herodrop b{font-size:17px}
+.ex .try{font:600 11.5px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.repl{border:0;background:none;padding:0 0 0 6px;font:600 10.5px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--accent);cursor:pointer}
+.scan{position:absolute;inset:0;pointer-events:none;z-index:3}
+.scan::before{content:"MEASURING";position:absolute;left:50%;top:14px;transform:translateX(-50%);font:600 11px/1 var(--mono);letter-spacing:.14em;color:var(--pencil);background:var(--viewer);padding:4px 8px;border:1px solid var(--pencil)}
+.scan::after{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:var(--pencil);animation:scan 1.1s ease-in-out forwards}
+@keyframes scan{from{top:0}to{top:100%}}
+.mbar{display:none}
+@media (max-width:760px){.mbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:40;justify-content:space-between;align-items:center;gap:12px;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));background:var(--plate);color:var(--plate-ink);border-top:1.5px solid var(--plate-muted)}.mbar b{font:600 20px/1 var(--mono)}.mbar small{display:block;font:500 11px/1.3 var(--mono);color:var(--plate-muted)}body.has-mbar{padding-bottom:90px}}
+@media (prefers-reduced-motion: reduce){.scan{display:none}*{transition:none!important;animation:none!important}}
 </style>
 
 <div class="wrap">
@@ -386,11 +407,11 @@ function loadSamples(){
 
 /* ---------- state ---------- */
 const MATS = {
-  al6061:{bp:0xA9C4E2, name:'6061-T6 aluminum', short:'6061 aluminum', desc:'Strong, light, machines clean', lb:3.10, date:'Sep 15', jobs:12, inBand:11, state:'on', factor:1.00, density:0.0975, color:0xC9CED4, metal:.55, rough:.36, sw:'linear-gradient(135deg,#dfe3e7,#b9c0c7 55%,#e7eaed)'},
-  al7075:{bp:0x9CB6D6, name:'7075-T6 aluminum', short:'7075 aluminum', desc:'Highest strength aluminum', lb:5.40, date:'Sep 15', jobs:7, inBand:6, state:'practice', factor:1.28, density:0.101, color:0xC0C6CD, metal:.55, rough:.34, sw:'linear-gradient(135deg,#d6dbe0,#aab2ba 55%,#dde1e5)'},
-  ss304:{bp:0xB7C2CF, name:'304 stainless', short:'304 stainless', desc:'Corrosion resistant, tough', lb:2.90, date:'Sep 12', jobs:4, inBand:3, state:'practice', factor:1.85, density:0.289, color:0xAEB4B9, metal:.7, rough:.28, sw:'linear-gradient(135deg,#c9cdd1,#9aa1a7 55%,#d3d6d9)'},
-  st1018:{bp:0x8C9BAE, name:'1018 steel', short:'1018 steel', desc:'Low carbon, weldable', lb:1.10, date:'Sep 12', jobs:11, inBand:10, state:'practice', factor:1.35, density:0.284, color:0x80878D, metal:.6, rough:.45, sw:'linear-gradient(135deg,#9aa0a5,#6c7378 55%,#a3a8ac)'},
-  delrin:{bp:0xEEF2F6, name:'Delrin (acetal)', short:'Delrin', desc:'Slippery, stable plastic', lb:6.20, date:'Sep 10', jobs:2, inBand:2, state:'practice', factor:0.90, density:0.051, color:0xEFEDE6, metal:0, rough:.7, sw:'linear-gradient(135deg,#f7f6f1,#e2dfd6)'}
+  al6061:{bp:0xA9C4E2, name:'6061-T6 aluminum', short:'6061 aluminum', desc:'Strong, light, machines clean', lb:3.10, date:'Sep 15', jobs:12, inBand:11, state:'on', factor:1.00, density:0.0975, color:0xC9CED4, metal:.55, rough:.36, sw:'repeating-linear-gradient(45deg,var(--ink) 0 1.4px,transparent 1.4px 7px),var(--surface)'},
+  al7075:{bp:0x9CB6D6, name:'7075-T6 aluminum', short:'7075 aluminum', desc:'Highest strength aluminum', lb:5.40, date:'Sep 15', jobs:7, inBand:6, state:'practice', factor:1.28, density:0.101, color:0xC0C6CD, metal:.55, rough:.34, sw:'repeating-linear-gradient(45deg,var(--ink) 0 1.4px,transparent 1.4px 4px),var(--surface)'},
+  ss304:{bp:0xB7C2CF, name:'304 stainless', short:'304 stainless', desc:'Corrosion resistant, tough', lb:2.90, date:'Sep 12', jobs:4, inBand:3, state:'practice', factor:1.85, density:0.289, color:0xAEB4B9, metal:.7, rough:.28, sw:'repeating-linear-gradient(45deg,var(--ink) 0 1.2px,transparent 1.2px 7px),repeating-linear-gradient(-45deg,var(--ink) 0 1.2px,transparent 1.2px 7px),var(--surface)'},
+  st1018:{bp:0x8C9BAE, name:'1018 steel', short:'1018 steel', desc:'Low carbon, weldable', lb:1.10, date:'Sep 12', jobs:11, inBand:10, state:'practice', factor:1.35, density:0.284, color:0x80878D, metal:.6, rough:.45, sw:'repeating-linear-gradient(45deg,var(--ink) 0 2.6px,transparent 2.6px 8px),var(--surface)'},
+  delrin:{bp:0xEEF2F6, name:'Delrin (acetal)', short:'Delrin', desc:'Slippery, stable plastic', lb:6.20, date:'Sep 10', jobs:2, inBand:2, state:'practice', factor:0.90, density:0.051, color:0xEFEDE6, metal:0, rough:.7, sw:'repeating-linear-gradient(45deg,var(--ink) 0 1.2px,transparent 1.2px 4px,var(--ink) 4px 5.2px,transparent 5.2px 12px),var(--surface)'}
 };
 const FINISHES = {
   none:{name:'As machined', desc:'Fastest. Standard 125 Ra finish, edges broken.', add:0},
@@ -598,7 +619,7 @@ class Viewer{
   }
   snapshot(){ if (!HAS3D || !this.host) return ''; const lab = this.labels.length; this.draw(); try { return this.renderer.domElement.toDataURL('image/png'); } catch(e){ return ''; } }
 }
-const buyerViewer = new Viewer(), shopViewer = new Viewer();
+const buyerViewer = new Viewer(), shopViewer = new Viewer(), heroViewer = new Viewer();
 const thumbCache = {};
 function thumb(p, mat){
   if (!HAS3D || !p || p.dxf) return '';
@@ -666,7 +687,7 @@ function render(){
   $('#vBuyer').setAttribute('aria-pressed', S.view === 'buyer');
   $('#vShop').setAttribute('aria-pressed', S.view === 'shop');
   const site = $('#site');
-  if (S.view === 'shop'){ site.innerHTML = shopPage(); bindShop(); return; }
+  if (S.view === 'shop'){ document.body.classList.remove('has-mbar'); site.innerHTML = shopPage(); bindShop(); return; }
   let body;
   switch (S.page){
     case 'home': body = home(); break;
@@ -678,6 +699,7 @@ function render(){
     case 'requested': body = requestedPage(); break;
   }
   site.innerHTML = nav() + body + footer();
+  document.body.classList.toggle('has-mbar', S.page === 'configure');
   bindBuyer();
 }
 function go(page, anchor){ S.page = page; if (page !== 'pay') stopHold(); render(); const t = anchor && document.getElementById(anchor); if (t) t.scrollIntoView({behavior: reduce ? 'auto' : 'smooth'}); else window.scrollTo({top:0, behavior: reduce ? 'auto' : 'smooth'}); }
@@ -688,7 +710,14 @@ function exampleCard(k){
   const rows = [1, 10, 25].map(q => { const pr = priceAt(p, mat, q, 'standard'), one = priceAt(p, mat, 1, 'standard').unit; const save = Math.round((1 - pr.unit / one) * 100);
     return `<tr><td>${q} ${q === 1 ? 'part' : 'parts'}</td><td>${money(pr.unit)}/ea</td><td>${q === 1 ? '' : '−' + save + '%'}</td></tr>`; }).join('');
   return `<button class="ex" data-sample="${k}">${img ? `<img class="thumb grid-paper" src="${img}" alt="${esc(p.title)} rendered in 3D">` : '<span class="thumb"></span>'}
-    <div class="body"><div><h3>${esc(p.title)}</h3><span class="hint">${esc(MATS[mat].short)} · ${esc(p.blurb)}</span></div><table class="ladder">${rows}</table></div></button>`;
+    <div class="body"><div><h3>${esc(p.title)}</h3><span class="hint">${esc(MATS[mat].short)} · ${esc(p.blurb)}</span></div><table class="ladder">${rows}</table><span class="try">Open in the quoter →</span></div></button>`;
+}
+function heroSheet(){
+  const p = SAMPLES.plate; if (!p) return '';
+  const pr = priceAt(p, 'al6061', 10, 'standard');
+  return `<div class="sheet"><div class="sheet-view grid-paper" id="hv"><span class="vhint">drag to rotate</span></div>
+    <dl class="titleblk"><div><dt>Part</dt><dd>Mounting plate</dd></div><div><dt>Material</dt><dd>6061-T6</dd></div><div><dt>Dwg no.</dt><dd>HA-0001</dd></div>
+    <div><dt>Qty</dt><dd>10</dd></div><div><dt>Each</dt><dd class="red">${money(pr.unit)}</dd></div><div><dt>Ships</dt><dd>${fmtDate(shipDate('standard'))}</dd></div></dl></div>`;
 }
 function home(){
   const mats = Object.values(MATS).map(m => { const inst = m.state === 'on' && !S.paused; return `<span class="pill ${inst ? 'go' : 'practice'}">${esc(m.short)} · ${inst ? 'instant price' : 'quoted by our team'}</span>`; }).join('');
@@ -699,12 +728,11 @@ function home(){
         <p class="lede">Drop a STEP or STL file. Simple parts in proven materials get a fixed price and a Pay button in seconds. Everything else gets a quote from our team within one business day.</p>
         <div class="facts"><div><b>±0.005 in</b> standard tolerance</div><div><b>7</b> business days standard</div><div><b>1</b> business day review</div></div>
       </div>
-      <div class="dropbig" id="heroDrop" role="button" tabindex="0" aria-label="Upload a part file">
-        <svg width="46" height="46" viewBox="0 0 46 46" aria-hidden="true"><path d="M23 30V10m0 0-8 8m8-8 8 8" stroke="currentColor" stroke-width="2.4" fill="none"/><path d="M8 28v8h30v-8" stroke="currentColor" stroke-width="2.4" fill="none"/></svg>
-        <b>Drop your part file here</b>
-        <span class="hint">or click to choose one. Up to 20 MB. Your design stays yours.</span>
-        <div class="filetypes"><span>.STEP</span><span>.STP</span><span>.STL</span><span>.DXF</span></div>
-        <button class="btn small ghost" data-go="upload" style="color:var(--plate-ink);border-color:var(--plate-line)">Or try a sample part</button>
+      <div>${heroSheet()}
+        <div class="dropbig herodrop" id="heroDrop" role="button" tabindex="0" aria-label="Upload a part file">
+          <b>Drop your part file here</b><span class="hint">or click to choose one · up to 20 MB</span>
+          <div class="filetypes"><span>.STEP</span><span>.STP</span><span>.STL</span><span>.DXF</span></div>
+        </div>
       </div>
     </section>
     ${S.uploadMsg && S.page === 'home' ? `<div class="section"><div class="notice warn">${esc(S.uploadMsg)}</div></div>` : ''}
@@ -742,7 +770,7 @@ function uploadPage(){
 function stepperBar(i){
   const p = S.part, names = ['File', 'Configure', 'Verify and pay', 'Review', 'Make and ship'];
   const vals = [p ? p.file : 'Upload', p ? MATS[S.material].short + ' · ' + S.qty + ' pcs' : '', 'Email and terms', 'Within 1 business day', ''];
-  return `<div class="appbar"><ol class="stepper" aria-label="Quote steps">${names.map((n, k) => `<li class="${k < i ? 'done' : k === i ? 'now' : ''}"><b>${k + 1}. ${n}</b><span>${esc(vals[k] || ' ')}</span></li>`).join('')}</ol></div>`;
+  return `<div class="appbar"><ol class="stepper" aria-label="Quote steps">${names.map((n, k) => `<li class="${k < i ? 'done' : k === i ? 'now' : ''}"><b>${k + 1}. ${n}</b><span>${esc(vals[k] || ' ')}${k === 0 && i > 0 && i < 3 ? '<button class="repl" data-go="upload">replace</button>' : ''}</span></li>`).join('')}</ol></div>`;
 }
 
 /* configure */
@@ -761,7 +789,7 @@ function configure(){
       <label class="opt"><input type="radio" name="lead" value="rush" ${S.lead === 'rush' ? 'checked' : ''}><span><b>Rush <span class="tag">optional add-on</span></b><small>Ships by ${fmtDate(shipDate('rush'))}. Moves your part to the front of the line.</small></span><span class="price-d">${pRush ? '+' + S.rushPct + '%' : ''}</span></label></div>`;
   return `${stepperBar(1)}<div class="app">
     <div class="col c-view">${p && !p.dxf ? viewerHTML('bv', p) : `<div class="viewer"><div class="vempty"><div class="stack-s"><h3>2D drawing</h3><p>${esc(p ? p.file : '')}</p><p class="hint">Drawings can't be measured automatically, so our team quotes them.</p></div></div></div>`}
-      ${p && !p.dxf ? `<dl class="measure"><div><dt>Size (in)</dt><dd>${p.dims.map(d => d.toFixed(3)).join(' × ')}</dd></div><div><dt>Size (mm)</dt><dd>${p.dims.map(d => (d * 25.4).toFixed(1)).join(' × ')}</dd></div><div><dt>Metal volume</dt><dd>${p.vol.toFixed(2)} in³</dd></div><div><dt>Through-holes</dt><dd>${p.holes}</dd></div><div><dt>Weight</dt><dd>${(p.vol * m.density).toFixed(2)} lb</dd></div><div><dt>Triangles</dt><dd>${(p.triCount || 0).toLocaleString()}</dd></div></dl>
+      ${p && !p.dxf ? `<dl class="measure"><div><dt>Part</dt><dd>${esc(p.title)}</dd></div><div><dt>Material</dt><dd>${esc(m.short)}</dd></div><div><dt>Finish</dt><dd>${esc(FINISHES[S.finish].name)}${S.finish === 'anodize' ? ', ' + S.color : ''}</dd></div><div><dt>Qty</dt><dd>${S.qty}</dd></div><div><dt>Size (in)</dt><dd>${p.dims.map(d => d.toFixed(3)).join(' × ')}</dd></div><div><dt>Size (mm)</dt><dd>${p.dims.map(d => (d * 25.4).toFixed(1)).join(' × ')}</dd></div><div><dt>Metal volume</dt><dd>${p.vol.toFixed(2)} in³</dd></div><div><dt>Through-holes</dt><dd>${p.holes}</dd></div><div><dt>Weight</dt><dd>${(p.vol * m.density).toFixed(2)} lb</dd></div><div><dt>Triangles</dt><dd>${(p.triCount || 0).toLocaleString()}</dd></div></dl>
       <p class="hint" style="margin-top:8px">Measured in your browser. Our server checks the numbers again before it prices anything.</p>` : ''}
     </div>
     <div class="col c-config">
@@ -776,7 +804,8 @@ function configure(){
       ${p && !p.dxf ? `<div class="cfg-sec"><h4>Manufacturability checks</h4><ul class="checks">${ck}</ul></div>` : ''}
     </div>
     <div class="col c-price">${pricePanel(ev)}</div>
-  </div>`;
+  </div>
+  ${ev.pr || ev.reasons.length ? `<div class="mbar"><div>${ev.pr ? `<b>${money(ev.pr.unit)}</b><small>per part · ${money(ev.pr.total)} for ${S.qty}</small>` : '<b>Team quote</b><small>within 1 business day</small>'}</div><button class="btn" data-mbar>${ev.instant ? 'Continue' : 'Request quote'}</button></div>` : ''}`;
 }
 function pricePanel(ev){
   const p = S.part;
@@ -868,7 +897,7 @@ function requestedPage(){
 function usePart(p){
   S.part = p; S.material = p.material || 'al6061'; S.finish = 'none'; S.lead = 'standard'; S.qty = p.dxf ? 1 : 10; S.detailsOpen = false;
   S.dec = {tight:false, threads:!!p.threads, drawing:false, own:false}; S.payState = 'idle'; S.terms = false; S.uploadMsg = ''; S.uploadInfo = '';
-  buyerViewer.partId = null;
+  buyerViewer.partId = null; S.scan = !p.dxf && !reduce;
   go('configure');
 }
 function takeFile(file){
@@ -913,8 +942,11 @@ function bindBuyer(){
   $$('[data-go]').forEach(b => b.onclick = e => { e.preventDefault(); const g = b.dataset.go; if (g === 'how' || g === 'materials'){ if (S.page !== 'home'){ S.page = 'home'; render(); } go('home', g); } else go(g); });
   $$('[data-sample]').forEach(b => b.onclick = () => usePart(SAMPLES[b.dataset.sample]));
   bindDrop($('#heroDrop')); bindDrop($('#drop'));
+  const hv = $('#hv'); if (hv && HAS3D && SAMPLES.plate){ heroViewer.mount(hv); heroViewer.setPart(SAMPLES.plate); heroViewer.setLook(MATS.al6061.bp, .12, .78);
+    if (!heroViewer.zoomed){ heroViewer.zoomed = true; const t = heroViewer.controls.target, cp = heroViewer.camera.position.clone().sub(t).multiplyScalar(.7).add(t); heroViewer.go(cp, t.clone(), false); } }
   if (S.page === 'configure'){
-    if (S.part && !S.part.dxf){ bindViewer('bv', buyerViewer); buyerViewer.setPart(S.part); buyerViewer.setLook(...lookFor()); }
+    if (S.part && !S.part.dxf){ bindViewer('bv', buyerViewer); buyerViewer.setPart(S.part); buyerViewer.setLook(...lookFor());
+      if (S.scan){ S.scan = false; const bv = $('#bv'); const sc = document.createElement('div'); sc.className = 'scan'; bv.appendChild(sc); setTimeout(() => sc.remove(), 1200); } }
     $$('[data-mat]').forEach(b => b.onclick = () => { S.material = b.dataset.mat; if (S.finish === 'anodize' && !S.material.startsWith('al')) S.finish = 'none'; render(); });
     $$('[data-dec]').forEach(c => c.onchange = () => { S.dec[c.dataset.dec] = c.checked; render(); });
     $$('input[name="finish"]').forEach(r => r.onchange = () => { S.finish = r.value; render(); });
@@ -927,6 +959,7 @@ function bindBuyer(){
     const qp = $('#qPlus'); if (qp) qp.onclick = () => setQ(S.qty + 1);
     const qi = $('#qty'); if (qi) qi.onchange = () => setQ(parseInt(qi.value, 10));
     const d = $('#details'); if (d) d.onclick = () => { S.detailsOpen = !S.detailsOpen; render(); };
+    const mb = document.querySelector('[data-mbar]'); if (mb) mb.onclick = () => { const b = $('#toPay') || $('#sendReq'); if (b) b.click(); };
     const tp = $('#toPay'); if (tp) tp.onclick = () => { S.snap = buyerViewer.snapshot(); S.payState = 'idle'; S.terms = false; S.hold = 900; go('pay'); startHold(); };
   }
   const sr = $('#sendReq'); if (sr) sr.onclick = () => { if (S.page === 'configure') S.snap = buyerViewer.snapshot(); sendRequest(); };
