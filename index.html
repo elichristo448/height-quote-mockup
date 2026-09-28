@@ -218,8 +218,10 @@ const SCEN = {
   plate:   {file:'mounting-plate.step', title:'Mounting plate', dims:[4,3,0.5], vol:5.42, holes:4, bodies:1, intricate:false, material:'al6061', note:'Simple part, aluminum, gets an instant price'},
   bracket: {file:'angle-bracket.step', title:'Angle bracket', dims:[3,2,2], vol:3.10, holes:2, bodies:1, intricate:false, material:'ss304', note:'Stainless is still priced by the team'},
   housing: {file:'sensor-housing.step', title:'Sensor housing', dims:[2.5,2.5,1.25], vol:4.05, holes:1, bodies:1, intricate:true, material:'al6061', threads:true, note:'Threads and a deep pocket go to a person'},
-  dxf:     {file:'flat-pattern.dxf', title:'Flat pattern', dxf:true, material:'al6061', note:'2D drawings are always quoted by the team'}
+  dxf:     {file:'flat-pattern.dxf', title:'Flat pattern', dxf:true, material:'al6061', note:'2D drawings are always quoted by the team'},
+  forged:  {file:'mounting-plate-edited.step', title:'Mounting plate (tampered)', dims:[4,3,0.5], vol:2.10, trueVol:5.42, holes:4, bodies:1, intricate:false, material:'al6061', note:'Demo: someone changed the numbers the browser sent. Review catches it.'}
 };
+const gateOk = m => m.jobs >= 12 && m.inBand / m.jobs >= 10/12 - 1e-9;
 const S = {
   view:'buyer', step:'home', scen:'plate', material:'al6061', qty:10,
   dec:{threads:false, tight:false, drawing:false, own:false}, country:'US',
@@ -227,16 +229,17 @@ const S = {
   payState:'idle', paused:false, pauseReason:'', cap:500, maxQty:10, perDay:10, openCap:3, rampDone:2,
   shopTab:'queue', selOrder:null, nextOrder:1042, nextHQ:2031, hold:900, holdTimer:null,
   materials:{
-    al6061:{name:'6061 aluminum', lb:3.10, date:'Sep 15', jobs:12, gate:true,  state:'on',       factor:1.00},
-    al7075:{name:'7075 aluminum', lb:5.40, date:'Sep 15', jobs:7,  gate:false, state:'practice', factor:1.28},
-    ss304: {name:'304 stainless', lb:2.90, date:'Sep 12', jobs:4,  gate:false, state:'practice', factor:1.85},
-    st1018:{name:'1018 steel',    lb:1.10, date:'Sep 12', jobs:9,  gate:false, state:'practice', factor:1.35},
-    delrin:{name:'Delrin (acetal)',lb:6.20, date:'Sep 10', jobs:2,  gate:false, state:'practice', factor:0.90}
+    al6061:{name:'6061 aluminum', lb:3.10, date:'Sep 15', jobs:12, inBand:11, state:'on',       factor:1.00},
+    al7075:{name:'7075 aluminum', lb:5.40, date:'Sep 15', jobs:7,  inBand:6,  state:'practice', factor:1.28},
+    ss304: {name:'304 stainless', lb:2.90, date:'Sep 12', jobs:4,  inBand:3,  state:'practice', factor:1.85},
+    st1018:{name:'1018 steel',    lb:1.10, date:'Sep 12', jobs:11, inBand:10, state:'practice', factor:1.35},
+    delrin:{name:'Delrin (acetal)',lb:6.20, date:'Sep 10', jobs:2,  inBand:2,  state:'practice', factor:0.90}
   },
+  minOrder:150,
   orders:[
     {id:1041, part:'Spacer block', material:'al6061', qty:5, total:164.00, email:'ops@example.org', status:'review', due:addBusinessDays(new Date(),1), risk:'Low', match:true}
   ],
-  hand:[{id:'HQ-2030', part:'Manifold, 7075', reason:'7075 aluminum is quoted by the team', silent:612.00}],
+  hand:[{id:'HQ-2030', part:'Manifold, 7075 aluminum', material:'al7075', reason:'7075 aluminum is priced by our team for now.', silent:612.00}],
   log:[{t:'8:02 AM', m:'Order #1041 paid. Review due in 1 business day.'}]
 };
 
@@ -260,12 +263,14 @@ function gate(){
   if (sc.intricate) r.push(sc.custom ? 'This shape needs a closer look (pockets or thin walls).' : 'This shape needs a closer look (deep pocket).');
   if (S.country !== 'US') r.push('Instant orders ship to US addresses only.');
   if (S.qty > S.maxQty) r.push('Orders over ' + S.maxQty + ' pieces are quoted by our team.');
-  let unit = 0, total = 0;
-  if (!sc.dxf){ unit = unitPrice(sc, S.material, S.qty); total = unit * S.qty; }
+  if (!sc.dxf && Math.max(...sc.dims) > 12) r.push('Parts longer than 12 in are quoted by our team.');
+  if (!sc.dxf && sc.vol * 0.0975 * m.factor > 25) r.push('Parts over 25 lb are quoted by our team.');
+  let unit = 0, total = 0, minApplied = false;
+  if (!sc.dxf){ unit = unitPrice(sc, S.material, S.qty); total = unit * S.qty; if (total < S.minOrder){ total = S.minOrder; minApplied = true; } }
   if (!sc.dxf && total > S.cap) r.push('Orders over ' + money(S.cap) + ' are quoted by our team.');
   const open = S.orders.filter(o => o.status === 'review').length;
   if (open >= S.openCap && r.length === 0) r.push('Our review queue is full; our team will quote this instead.');
-  return {instant: r.length === 0, reasons:r, unit, total};
+  return {instant: r.length === 0, reasons:r, unit, total, minApplied};
 }
 
 /* flow strip */
@@ -321,7 +326,8 @@ function home(){
    + '<span class="label">CNC machining · Grain Valley, Missouri</span>'
    + '<h1>Drop your part file. Get a price in seconds.</h1>'
    + '<p class="muted" style="max-width:60ch">Simple parts in materials we have proven get an instant, fixed price you can pay right away. Everything else gets a quote from our team within one business day. A machinist checks every order before any metal is cut.</p>'
-   + '<div class="row"><button class="btn" data-go="upload">Get a quote</button><span class="hint">STEP or STL files</span></div></div>'
+   + '<div class="row"><button class="btn" data-go="upload">Get a quote</button><span class="hint">STEP or STL files</span></div>'
+   + '<div class="stack-s"><span class="label">Materials today</span><div class="row" style="gap:6px">'+Object.values(S.materials).map(m => '<span class="pill '+(m.state==='on'&&!S.paused?'on':'practice')+'">'+m.name+(m.state==='on'&&!S.paused?' · instant':' · quoted')+'</span>').join('')+'</div></div></div>'
    + '<div class="titleblock" aria-label="Shop details"><div><b>Shop</b><span>Height Automation</span></div><div><b>Location</b><span>Grain Valley, MO</span></div><div><b>Files</b><span>STEP · STL · DXF · PDF</span></div><div><b>Instant</b><span>simple parts, proven materials</span></div><div><b>Review</b><span>every order, 1 business day</span></div></div></div>'
    + '<div class="steps3"><div><h3>1. Upload</h3><p class="muted">Your file is measured right in your browser: size, metal volume and holes.</p></div><div><h3>2. Price or quote</h3><p class="muted">A fixed price and a Pay button, or a quote from our team if the part needs a person.</p></div><div><h3>3. Checked, then made</h3><p class="muted">We review every paid order within one business day. If we can\'t make it as priced, you get a full refund.</p></div></div>';
 }
@@ -401,9 +407,9 @@ function result(){
   else if (S.payState === 'working') pay = '<button class="btn" disabled>Getting your order ready…</button>';
   else pay = '<button class="btn" id="toCheckout">Continue to secure checkout →</button>';
   return '<div class="grid2"><div class="stack"><span class="label">'+sc.title+' · '+S.materials[S.material].name+'</span><div class="price mono">'+money(g.total)+'</div>'
-   + '<table class="lines"><tr><td>'+S.qty+' × '+money(g.unit)+' each</td><td>'+money(g.total)+'</td></tr><tr><td>Tax and shipping</td><td>at checkout</td></tr></table>'
+   + '<table class="lines"><tr><td>'+S.qty+' × '+money(g.unit)+' each</td><td>'+money(g.unit*S.qty)+'</td></tr>'+(g.minApplied?'<tr><td>Raised to the '+money(S.minOrder)+' order minimum</td><td>'+money(g.total)+'</td></tr>':'')+'<tr><td>Tax and shipping</td><td>at checkout</td></tr></table>'
    + '<div class="stack-s"><span class="label">Price by quantity</span><table class="qtable"><thead><tr><th>Qty</th><th>Each</th><th>Total</th><th></th></tr></thead><tbody>'
-   + [1,5,10,25].map(q => { const u = unitPrice(sc, S.material, q), tot = u*q; const inst = q <= S.maxQty && tot <= S.cap;
+   + [1,5,10,25].map(q => { const u = unitPrice(sc, S.material, q), tot = Math.max(u*q, S.minOrder); const inst = q <= S.maxQty && tot <= S.cap;
        return '<tr class="'+(q===S.qty?'cur':'')+'"><td>'+q+'</td><td class="mono">'+(inst?money(u):'—')+'</td><td class="mono">'+(inst?money(tot):'quoted by our team')+'</td><td>'+(q===S.qty||!inst?'':'<button data-qty="'+q+'">Pick</button>')+'</td></tr>'; }).join('')
    + '</tbody></table><p class="hint">Setup is shared across the parts, so each part costs less at higher quantities.</p></div>'
    + '<p>Ships by <b>'+fmtDate(ship)+'</b>: 7 business days after our one-business-day review.</p>'
@@ -653,14 +659,14 @@ function stopHold(){ clearInterval(S.holdTimer); S.holdTimer=null; }
 function placeOrder(){
   const t = totals(), sc = SCEN[S.scen], id = S.nextOrder++;
   const paidAt = new Date();
-  S.orders.push({id, part:sc.title, material:S.material, qty:S.qty, total:t.sub, email:S.email, status:'review', due:addBusinessDays(paidAt,1), paidAt, risk:'Low', match:true, dims:sc.dims, vol:sc.vol, holes:sc.holes, file:sc.file});
+  S.orders.push({id, part:sc.title, material:S.material, qty:S.qty, total:t.sub, email:S.email, status:'review', due:addBusinessDays(paidAt,1), paidAt, risk:'Low', dims:sc.dims, sentVol:sc.vol, vol:sc.trueVol || sc.vol, holes:sc.holes, file:sc.file, remeasured:false});
   S.log.unshift({t:now(), m:'Order #'+id+' paid, '+money(t.sub)+'. Review due '+fmtDate(addBusinessDays(paidAt,1))+'.'});
   go('done');
 }
 function sendRequest(){
   const g = gate(), sc = SCEN[S.scen], id = 'HQ-' + (S.nextHQ++);
   const silent = sc.dxf ? null : g.total;
-  S.hand.push({id, part:sc.title+', '+S.materials[S.material].name, reason:g.reasons[0], silent});
+  S.hand.push({id, part:sc.title+', '+S.materials[S.material].name, material:S.material, reason:g.reasons[0], silent});
   S.log.unshift({t:now(), m:'Quote request '+id+' received. '+(silent?'Practice price logged: '+money(silent)+'.':'No automatic price (2D drawing).')});
   go('requested');
 }
@@ -697,25 +703,31 @@ function reviewPanel(){
   if (!o) return '<div class="panel"><p class="muted">Pick an order to review it.</p></div>';
   const m = S.materials[o.material];
   let actions;
-  if (o.status==='review') actions = '<div class="field"><label for="why">If you reject, why</label><select id="why"><option value="price">Price is wrong beyond your limit</option><option value="make">Can\'t be made as submitted</option><option value="forged">File doesn\'t match the measurements</option><option value="prohibited">A part we don\'t make</option><option value="fraud">Payment looks risky</option><option value="buyer">Buyer asked to cancel</option></select></div><div class="row"><button class="btn good" id="approve">Approve for production</button><button class="btn bad" id="reject">Reject and refund</button></div>';
+  const sentV = o.sentVol != null ? o.sentVol : o.vol, mismatch = o.vol != null && Math.abs(sentV - o.vol) / o.vol > 0.02;
+  let measureRow;
+  if (!o.remeasured) measureRow = '<div class="row"><button class="btn small ghost" id="remeasure">Re-measure the stored file</button><span class="hint">Required before you can approve.</span></div>';
+  else if (mismatch) measureRow = '<div class="row"><span class="pill bad">Mismatch</span><span>The stored file measures '+o.vol.toFixed(2)+' in³ of metal. The buyer\'s browser sent '+sentV.toFixed(2)+' in³. Reject with "File doesn\'t match".</span></div>';
+  else measureRow = '<div class="row"><span class="pill on">Match</span><span>The stored file matches what the buyer\'s browser sent'+(o.vol!=null?' ('+o.vol.toFixed(2)+' in³)':'')+'.</span></div>';
+  if (o.status==='review') actions = '<div class="field"><label for="why">If you reject, why</label><select id="why"><option value="price">Price is wrong beyond your limit</option><option value="make">Can\'t be made as submitted</option><option value="forged"'+(o.remeasured&&mismatch?' selected':'')+'>File doesn\'t match the measurements</option><option value="prohibited">A part we don\'t make</option><option value="fraud">Payment looks risky</option><option value="buyer">Buyer asked to cancel</option></select></div><div class="row"><button class="btn good" id="approve"'+(o.remeasured&&!mismatch?'':' disabled')+'>Approve for production</button><button class="btn bad" id="reject">Reject and refund</button></div>';
   else if (o.status==='approved') actions = '<div class="notice good">Approved '+(o.when||'')+'. Ready for production.</div>';
   else actions = '<div class="notice bad">Cancelled. '+o.refundNote+'</div>';
   return '<div class="panel stack"><div class="row" style="justify-content:space-between"><h3>Order #'+o.id+'</h3>'+(o.status==='review'?'<span class="hint">Review by '+fmtDate(o.due)+'</span>':'')+'</div>'
    + '<dl class="kv"><dt>Part</dt><dd>'+o.part+'</dd>'+(o.file?'<dt>File</dt><dd>'+o.file+'</dd>':'')+'<dt>Material, qty</dt><dd>'+m.name+', '+o.qty+'</dd><dt>Total (before tax)</dt><dd>'+money(o.total)+'</dd><dt>Buyer</dt><dd>'+o.email+'</dd>'
    + (o.dims?'<dt>Size (in)</dt><dd>'+o.dims.map(d=>d.toFixed(3)).join(' × ')+'</dd><dt>Metal volume</dt><dd>'+o.vol.toFixed(2)+' in³</dd><dt>Through-holes</dt><dd>'+o.holes+'</dd>':'')+'</dl>'
    + '<div class="stack-s"><span class="label">Checks</span>'
-   + '<div class="row"><span class="pill on">Match</span><span>Re-measured file matches what the buyer\'s browser sent</span></div>'
+   + measureRow
    + '<div class="row"><span class="pill on">'+o.risk+'</span><span>Payment risk from the checkout</span></div>'
    + '<div class="row"><span class="pill on">OK</span><span>Price per part is in your usual range</span></div></div>'
    + actions + '</div>';
 }
 function rates(){
   const rows = Object.entries(S.materials).map(([k,m])=>{
-    const btn = (s,t)=>'<button data-mat="'+k+'" data-state="'+s+'" aria-pressed="'+(m.state===s)+'"'+(s==='on'&&!m.gate?' disabled title="Needs 12 simple past jobs that pass the price check"':'')+'>'+t+'</button>';
-    return '<tr><td><b>'+m.name+'</b></td><td class="num">'+money(m.lb)+'/lb<br><span class="hint">'+m.date+'</span></td><td class="num">'+m.jobs+' of 12</td><td>'+(m.gate?'<span class="pill on">Passed</span>':'<span class="pill practice">Not yet</span>')+'</td><td>'+stateLabel(m.state)+'</td><td><span class="statebtns">'+btn('on','Live')+btn('practice','Practice')+btn('paused','Paused')+'</span></td></tr>';
+    const ok = gateOk(m);
+    const btn = (s,t)=>'<button data-mat="'+k+'" data-state="'+s+'" aria-pressed="'+(m.state===s)+'"'+(s==='on'&&!ok?' disabled title="Needs 12 simple past jobs that pass the price check"':'')+'>'+t+'</button>';
+    return '<tr><td><b>'+m.name+'</b></td><td class="num">'+money(m.lb)+'/lb<br><span class="hint">'+m.date+'</span></td><td class="num">'+Math.min(m.jobs,99)+' of 12<br><span class="hint">'+m.inBand+' within 10%</span><br><button class="btn small ghost" data-addjob="'+k+'" style="margin-top:4px">Add a past job</button></td><td>'+(ok?'<span class="pill on">Passed</span>':'<span class="pill practice">Not yet</span>')+'</td><td>'+stateLabel(m.state)+'</td><td><span class="statebtns">'+btn('on','Live')+btn('practice','Practice')+btn('paused','Paused')+'</span></td></tr>';
   }).join('');
   const steps = [500,1000,2500].map(v=>v===S.cap?'<b>'+money(v)+'</b>':money(v)).join(' → ');
-  return '<div class="stack"><div class="stack-s"><h3>Materials</h3><p class="hint">Live: buyers get an instant price. Practice: the system prices silently and logs it next to your team\'s quote. Paused: stopped. A material can go Live only after 12 of your simple past jobs price within your band.</p></div>'
+  return '<div class="stack"><div class="stack-s"><h3>Materials</h3><p class="hint">Live: buyers get an instant price. Practice: the system prices silently and logs it next to your team\'s quote. Paused: stopped. A material can go Live only after 12 of your simple past jobs are priced and at least 10 of every 12 land within 10% of what you charged. Each quote your team sends also counts as a past job.</p></div>'
    + '<div class="tablewrap"><table class="q"><thead><tr><th>Material</th><th>Metal price</th><th>Past jobs</th><th>Price check</th><th>State</th><th>Set state</th></tr></thead><tbody>'+rows+'</tbody></table></div>'
    + '<div class="row"><button class="btn small ghost" id="edit6061">Update the 6061 metal price</button><span class="hint" id="editNote">Any price edit pauses that material and re-checks your 12 past jobs.</span></div>'
    + '<div class="grid2"><div class="panel stack-s"><h3>Instant pay limits</h3><dl class="kv"><dt>Largest instant order</dt><dd>'+money(S.cap)+'</dd><dt>Largest quantity</dt><dd>'+S.maxQty+'</dd><dt>Paid instant orders per day</dt><dd>'+S.perDay+'</dd><dt>Open reviews before new buyers go to your team</dt><dd>'+S.openCap+'</dd></dl></div>'
@@ -734,7 +746,12 @@ function bindShop(){
     S.log.unshift({t:now(), m:'Order #'+o.id+' rejected: '+txt+'. '+o.refundNote}); render(); };
   const od=$('#overdue'); if(od) od.onclick=()=>{ const o=S.orders.find(x=>x.status==='review'); S.paused=true; S.pauseReason = o ? 'Order #'+o.id+' went past its review deadline. The buyer was told and offered a free cancel.' : 'A review went past its deadline.'; S.log.unshift({t:now(), m:'Instant pay paused automatically: '+S.pauseReason}); render(); };
   const up=$('#unpause'); if(up) up.onclick=()=>{ const o=S.orders.find(x=>x.status==='review'); if(o && S.pauseReason.includes('#'+o.id)){ S.shopTab='queue'; S.selOrder=o.id; const n=document.querySelector('.notice.warn'); render(); const w=document.querySelector('.notice.warn'); if(w) w.insertAdjacentHTML('beforeend','<p style="margin-top:8px">Review order #'+o.id+' first. Instant pay turns back on after the overdue order is reviewed.</p>'); return; } S.paused=false; S.pauseReason=''; S.log.unshift({t:now(), m:'Instant pay turned back on by the owner.'}); render(); };
-  document.querySelectorAll('[data-mat]').forEach(b=>b.onclick=()=>{ const m=S.materials[b.dataset.mat]; if(b.disabled) return; m.state=b.dataset.state; S.log.unshift({t:now(), m:m.name+' set to '+(m.state==='on'?'Live':m.state==='practice'?'Practice':'Paused')+' by the owner.'}); render(); });
+  document.querySelectorAll('[data-mat]').forEach(b=>b.onclick=()=>{ const m=S.materials[b.dataset.mat]; if(b.disabled) return; const was=m.state; m.state=b.dataset.state; S.log.unshift({t:now(), m:m.name+' set to '+(m.state==='on'?'Live':m.state==='practice'?'Practice':'Paused')+' by the owner.'+(m.state==='on'&&was!=='on'?' Sign-off recorded with the price check results.':'')}); render(); });
+  document.querySelectorAll('[data-addjob]').forEach(b=>b.onclick=()=>{ const m=S.materials[b.dataset.addjob], before=gateOk(m);
+    const gap = Math.round((Math.random()*28 - 12) * 10) / 10; m.jobs++; if (Math.abs(gap) <= 10) m.inBand++;
+    S.log.unshift({t:now(), m:'Past job added for '+m.name+': the system\'s price was '+(gap>=0?'+':'')+gap.toFixed(1)+'% from what you charged'+(Math.abs(gap)<=10?' (within 10%).':' (outside 10%).')});
+    if (!before && gateOk(m)) S.log.unshift({t:now(), m:m.name+' passed the price check: '+m.inBand+' of '+m.jobs+' past jobs within 10%. It can now go Live once you sign off.'});
+    render(); });
   const ed=$('#edit6061'); if(ed) ed.onclick=()=>{ const m=S.materials.al6061; const prev=m.state; m.lb=3.25; m.date='today'; m.state='paused'; S.log.unshift({t:now(), m:'6061 metal price changed to $3.25/lb. 6061 paused while past jobs are re-checked.'}); render(); const n=$('#editNote'); if(n) n.textContent='Re-checking your 12 past jobs…';
     setTimeout(()=>{ m.state = prev==='paused'?'paused':'on'; S.log.unshift({t:now(), m:'Re-check passed: all 12 past jobs still inside your band. 6061 back to '+(m.state==='on'?'Live':'Paused')+'. Change emailed to the owner.'}); render(); const n2=$('#editNote'); if(n2) n2.textContent='Re-check passed in seconds. 6061 is back to Live.'; }, reduce?100:1600); };
   const pa=$('#pauseAll'); if(pa) pa.onclick=()=>{ if(S.paused) return; S.paused=true; S.pauseReason='Paused by the owner.'; S.log.unshift({t:now(), m:'All instant pay paused by the owner.'}); render(); };
@@ -742,7 +759,12 @@ function bindShop(){
     const v = parseFloat((inp.value||'').replace(/[$,]/g,''));
     if (!(v > 0)){ inp.setCustomValidity('Enter your price in dollars, for example 480'); inp.reportValidity(); return; }
     h.sent = true; h.teamPrice = v; h.gap = h.silent ? (h.silent - v) / v * 100 : 0;
-    S.log.unshift({t:now(), m:'Quote '+id+' sent at '+money(v)+' with a pay link.'+(h.silent?' Practice price was '+money(h.silent)+' ('+(h.gap>=0?'+':'')+h.gap.toFixed(1)+'%). Added to the calibration log.':'')}); render(); });
+    const hm = h.material && S.materials[h.material], before = hm && gateOk(hm);
+    if (hm && h.silent){ hm.jobs++; if (Math.abs(h.gap) <= 10) hm.inBand++; }
+    S.log.unshift({t:now(), m:'Quote '+id+' sent at '+money(v)+' with a pay link.'+(h.silent?' Practice price was '+money(h.silent)+' ('+(h.gap>=0?'+':'')+h.gap.toFixed(1)+'%). Counted as a past job for '+hm.name+'.':'')});
+    if (hm && !before && gateOk(hm)) S.log.unshift({t:now(), m:hm.name+' passed the price check. It can now go Live once you sign off.'});
+    render(); });
+  const rm=$('#remeasure'); if(rm) rm.onclick=()=>{ rm.disabled=true; rm.textContent='Re-measuring…'; setTimeout(()=>{ const o=S.orders.find(x=>x.id===S.selOrder); o.remeasured=true; const bad = o.vol!=null && o.sentVol!=null && Math.abs(o.sentVol-o.vol)/o.vol>0.02; S.log.unshift({t:now(), m:'Order #'+o.id+' re-measured: '+(bad?'mismatch with the buyer\'s numbers.':'matches.')}); render(); }, reduce?50:900); };
 }
 
 $('#vBuyer').onclick=()=>{ S.view='buyer'; render(); };
