@@ -72,6 +72,7 @@ button{cursor:pointer}
 .brand{display:flex;align-items:center;gap:12px;font:700 19px/1 var(--display);letter-spacing:.04em;text-transform:uppercase;background:none;border:0;color:inherit;padding:0;text-align:left}
 .brand small{display:block;font:500 10.5px/1 var(--mono);letter-spacing:.12em;color:var(--plate-muted);margin-top:5px}
 .navlinks{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+@media (max-width:600px){.navlinks button:not(.cta){display:none}.nav{flex-wrap:nowrap}.brand small{display:none}}
 .navlinks button{border:0;background:transparent;color:var(--plate-muted);padding:8px 10px;font:600 13px/1 var(--display);letter-spacing:.08em;text-transform:uppercase}
 .navlinks button.on,.navlinks button:hover{color:var(--plate-ink)}
 .navlinks .cta{background:var(--accent);color:var(--accent-ink);border-radius:3px}
@@ -384,7 +385,7 @@ ul.reasons{margin:6px 0 0;padding-left:18px;font-size:14px}
     </div>
   </div>
   <div class="site" id="site"></div>
-  <p class="footnote">Every price, date, order number and email here is made up. Changes in the shop view, such as pausing instant pay or switching a material live, change what the buyer view shows. Features marked <span class="tag s2">Stage 2</span> are planned for later and priced by our team for now.</p>
+  <p class="footnote">Every price, date, order number and email here is made up. Changes in the shop view, such as pausing instant pay or switching a material live, change what the buyer view shows. Extras such as threads and finishes go to the team for a quote in this version.</p>
 </div>
 <input type="file" id="fileIn" accept=".stl,.step,.stp,.dxf" hidden>
 
@@ -824,7 +825,7 @@ function uploadPage(){
 const CSTEPS = ['size', 'material', 'options', 'price'];
 function stepperBar(i){
   const p = S.part, ev = p ? evaluate() : null;
-  const labels = ['Size', 'Material', 'Options', 'Price', 'Pay'];
+  const labels = ['File', 'Material', 'Extras', 'Price', 'Pay'];
   const vals = [
     p ? (p.dxf ? '2D drawing' : p.dims.slice(0, 2).map(d => d.toFixed(2)).join(' × ') + ' in') : 'Upload',
     p ? MATS[S.material].short : '',
@@ -844,12 +845,13 @@ function stepperBar(i){
 function configure(){
   const p = S.part, ev = evaluate(), m = MATS[S.material];
   const enter = S.lastStep !== S.cstep; S.lastStep = S.cstep;
-  if (p.dxf && S.cstep === 'size') S.cstep = 'material';
+  const firstStep = (p.dxf || !p.unitsAsk) ? 1 : 0;
+  if (firstStep === 1 && S.cstep === 'size') S.cstep = 'material';
   const idx = CSTEPS.indexOf(S.cstep);
   let panel = '';
   if (S.cstep === 'size'){
     const ask = p.unitsAsk;
-    panel = `<h3>Confirm your part</h3>
+    panel = `<h3>Confirm the units</h3>
       ${ask ? `<p class="muted">STL files don't store units. Which is right?</p>
         <div class="opts">${['in', 'mm'].map(u => `<label class="opt big"><input type="radio" name="units" value="${u}" ${p.unitsConfirmed && p.units === u ? 'checked' : ''}><span><b>${u === 'in' ? 'Inches' : 'Millimeters'}</b><small class="mono">${p.raw.map(d => d.toFixed(u === 'in' ? 3 : 1)).join(' × ')} ${u}</small></span><span></span></label>`).join('')}</div>`
       : `<p class="muted">We measured it in your browser.</p>`}
@@ -859,7 +861,7 @@ function configure(){
       return `<button class="mat" data-mat="${k}" aria-pressed="${k === S.material}"><span class="sw" style="background:${mm.sw}"></span><span><b>${esc(mm.name)}</b><small>${esc(mm.desc)}</small></span><span class="st ${inst ? 'i' : 'q'}">${inst ? 'Instant' : 'Team quote'}</span></button>`; }).join('')}</div>`;
   } else if (S.cstep === 'options'){
     const fin = Object.entries(FINISHES).map(([k, f]) => `<label class="opt"><input type="radio" name="finish" value="${k}" ${S.finish === k ? 'checked' : ''}><span><b>${esc(f.name)}${k === 'none' ? ' <span class="tag">fastest</span>' : ''}</b>${k === 'anodize' && S.finish === 'anodize' ? `<span class="swatches">${Object.entries(f.colors).map(([c, hex]) => `<button type="button" data-color="${c}" aria-pressed="${S.color === c}" aria-label="${c}" title="${c}" style="background:#${hex.toString(16).padStart(6, '0')}"></button>`).join('')}</span>` : ''}</span><span class="price-d">${k === 'none' ? 'included' : 'team quote'}</span></label>`).join('');
-    panel = `<h3>Anything special?</h3><p class="muted">Standard is ±0.005 in, edges broken, no threads. Leave these off for an instant price.</p>
+    panel = `<h3>Any extras?</h3><p class="muted">Most parts need none. Standard is ±0.005 in with edges broken. Extras get a quote from our team.</p>
       <div class="opts">${[['threads', 'Tapped holes'], ['tight', 'Tighter tolerance'], ['drawing', 'Drawing with notes'], ['own', 'My own material']].map(([k, t]) => `<label class="opt"><input type="checkbox" data-dec="${k}" ${S.dec[k] ? 'checked' : ''}><span><b>${t}</b></span><span class="price-d">team quote</span></label>`).join('')}</div>
       <h4 style="margin-top:6px">Finish</h4><div class="opts">${fin}</div>`;
   } else {
@@ -881,10 +883,10 @@ function configure(){
       ${ev.instant ? `<p class="okline">✓ Instant price. A machinist reviews it before production.</p>`
         : `<div class="notice info"><b>Our team will quote this within 1 business day.</b><ul class="reasons">${ev.reasons.map(r => `<li>${esc(r)}</li>`).join('')}</ul></div>`}`;
   }
-  const next = S.cstep === 'size' ? `<button class="btn" data-next ${p.unitsAsk && !p.unitsConfirmed ? 'disabled' : ''}>Next</button>`
+  const next = S.cstep === 'size' ? `<button class="btn" data-next ${p.unitsAsk && !p.unitsConfirmed ? 'disabled' : ''}>Continue</button>`
     : S.cstep === 'price' ? (ev.instant ? `<button class="btn" id="toPay">Continue to pay</button>` : `<button class="btn" id="sendReq">Request a quote</button>`)
-    : `<button class="btn" data-next>Next</button>`;
-  const back = idx <= (p.dxf ? 1 : 0) ? `<button class="btn ghost" data-go="upload">Replace file</button>` : `<button class="btn ghost" data-back>Back</button>`;
+    : `<button class="btn" data-next>${S.cstep === 'options' && !Object.values(S.dec).some(Boolean) && S.finish === 'none' ? 'No extras, continue' : 'Continue'}</button>`;
+  const back = idx <= firstStep ? `<button class="btn ghost" data-go="upload">Replace file</button>` : `<button class="btn ghost" data-back>Back</button>`;
   const sum = ev.pr && idx >= 1 ? `<span class="actsum"><b>${money(ev.pr.unit)}</b>/ea · ${S.qty} pcs · ships ${fmtDate(shipDate(S.lead))}</span>` : '<span class="actsum"></span>';
   return `${stepperBar(idx)}<div class="wiz">
     <div class="wiz-view">${p.dxf ? `<div class="viewer grid-paper"><div class="vempty"><div class="stack-s"><h3>2D drawing</h3><p class="mono">${esc(p.file)}</p><p class="hint">Drawings are quoted by our team.</p></div></div></div>` : viewerHTML('bv', p)}
@@ -931,7 +933,7 @@ function payPage(){
 function totals(){ const ev = evaluate(), sub = ev.pr.total, ship = 14, tax = Math.round(sub * 0.0785 * 100) / 100; return {sub, ship, tax, total: sub + ship + tax}; }
 function checkoutPage(){
   const t = totals(), p = S.part;
-  return `<div class="page"><div class="stack"><span class="label">Secure checkout · sample screen, no real payment</span><div class="co">
+  return `<div class="page"><div class="stack"><div class="row between"><span class="label">Secure checkout · sample screen, no real payment</span><button class="btn ghost small" data-go="pay">← Back</button></div><div class="co">
     <div class="stack"><div class="field"><label>Contact</label><div class="fake">${esc(S.email)}</div></div>
       <div class="field"><label>Ship to</label><div class="fake">Sample Buyer<br>400 Sample Industrial Dr<br>Lee's Summit, MO 64086</div></div>
       <div class="field"><label>Shipping</label><div class="fake">Ground, signature on delivery · ${money(t.ship)}</div></div>
@@ -959,7 +961,7 @@ function requestedPage(){
 function usePart(p){
   S.part = p; S.material = p.material || 'al6061'; S.finish = 'none'; S.lead = 'standard'; S.qty = p.dxf ? 1 : 10; S.detailsOpen = false;
   S.dec = {tight:false, threads:!!p.threads, drawing:false, own:false}; S.payState = 'idle'; S.terms = false; S.uploadMsg = ''; S.uploadInfo = '';
-  buyerViewer.partId = null; S.scan = !p.dxf && !reduce; S.cstep = p.dxf ? 'material' : 'size'; S.lastStep = null;
+  buyerViewer.partId = null; S.scan = !p.dxf && !reduce; S.cstep = (p.dxf || !p.unitsAsk) ? 'material' : 'size'; S.lastStep = null;
   go('configure');
 }
 function takeFile(file){
@@ -1012,7 +1014,7 @@ function bindBuyer(){
     $$('[data-mat]').forEach(b => b.onclick = () => { S.material = b.dataset.mat; if (S.finish === 'anodize' && !S.material.startsWith('al')) S.finish = 'none'; S.cstep = 'options'; render(); });
     $$('[data-mat]').forEach(b => { b.onmouseenter = () => { const mm = MATS[b.dataset.mat]; buyerViewer.setLook(mm.bp, .12, .78); }; b.onmouseleave = () => buyerViewer.setLook(...lookFor()); });
     const nx = document.querySelector('[data-next]'); if (nx) nx.onclick = () => { S.cstep = CSTEPS[Math.min(3, CSTEPS.indexOf(S.cstep) + 1)]; render(); };
-    const bk = document.querySelector('[data-back]'); if (bk) bk.onclick = () => { S.cstep = CSTEPS[Math.max(S.part.dxf ? 1 : 0, CSTEPS.indexOf(S.cstep) - 1)]; render(); };
+    const bk = document.querySelector('[data-back]'); if (bk) bk.onclick = () => { S.cstep = CSTEPS[Math.max((S.part.dxf || !S.part.unitsAsk) ? 1 : 0, CSTEPS.indexOf(S.cstep) - 1)]; render(); };
     $$('[data-dec]').forEach(c => c.onchange = () => { S.dec[c.dataset.dec] = c.checked; render(); });
     $$('input[name="finish"]').forEach(r => r.onchange = () => { S.finish = r.value; render(); });
     $$('[data-color]').forEach(b => b.onclick = e => { e.preventDefault(); S.color = b.dataset.color; render(); });
@@ -1026,7 +1028,7 @@ function bindBuyer(){
     const d = $('#details'); if (d) d.onclick = () => { S.detailsOpen = !S.detailsOpen; render(); };
     const tp = $('#toPay'); if (tp) tp.onclick = () => { S.snap = buyerViewer.snapshot(); S.payState = 'idle'; S.terms = false; S.hold = 900; go('pay'); startHold(); };
   }
-  $$('[data-jump]').forEach(b => b.onclick = () => { S.cstep = CSTEPS[+b.dataset.jump]; go('configure'); });
+  $$('[data-jump]').forEach(b => b.onclick = () => { const k = +b.dataset.jump; if (k === 0 && (S.part.dxf || !S.part.unitsAsk)){ go('upload'); return; } S.cstep = CSTEPS[k]; go('configure'); });
   const sr = $('#sendReq'); if (sr) sr.onclick = () => { if (S.page === 'configure') S.snap = buyerViewer.snapshot(); sendRequest(); };
   if (S.page === 'pay'){
     S.lastStep = 'pay';
