@@ -67,7 +67,7 @@ button{cursor:pointer}
 .seg button{border:0;background:transparent;padding:7px 14px;font:600 13px/1.2 var(--display);letter-spacing:.06em;text-transform:uppercase;color:var(--ink)}
 .seg button[aria-pressed="true"]{background:var(--ink);color:var(--surface)}
 
-.site{background:var(--surface);border:1.5px solid var(--ink);overflow:hidden}
+.site{background:var(--surface);border:1.5px solid var(--ink);overflow:clip}
 .nav{display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center;justify-content:space-between;padding:12px 20px;border-bottom:1.5px solid var(--ink)}
 .brand{display:flex;align-items:center;gap:12px;font:700 19px/1 var(--display);letter-spacing:.04em;text-transform:uppercase;background:none;border:0;color:inherit;padding:0;text-align:left}
 .brand small{display:block;font:500 10.5px/1 var(--mono);letter-spacing:.12em;color:var(--plate-muted);margin-top:5px}
@@ -314,6 +314,48 @@ dl{margin:0}
 @keyframes scan{from{top:0}to{top:100%}}
 .mbar{display:none}
 @media (max-width:760px){.mbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:40;justify-content:space-between;align-items:center;gap:12px;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));background:var(--plate);color:var(--plate-ink);border-top:1.5px solid var(--plate-muted)}.mbar b{font:600 20px/1 var(--mono)}.mbar small{display:block;font:500 11px/1.3 var(--mono);color:var(--plate-muted)}body.has-mbar{padding-bottom:90px}}
+.dots{display:flex;list-style:none;margin:0;padding:14px 18px;gap:0;overflow-x:auto}
+.dots li{flex:1 0 110px;position:relative;display:flex;justify-content:center}
+.dots li:not(:first-child)::before{content:"";position:absolute;left:-50%;right:50%;top:13px;border-top:1.5px dashed var(--line)}
+.dots li.done:not(:first-child)::before,.dots li.now:not(:first-child)::before{border-top-style:solid;border-color:var(--ink)}
+.dots .dotwrap,.dots button{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:6px;border:0;background:none;padding:0;color:inherit}
+.dots i{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font:600 12px/1 var(--mono);font-style:normal;background:var(--surface);border:1.5px solid var(--line);color:var(--muted)}
+.dots li.done i{background:var(--ink);border-color:var(--ink);color:var(--surface)}
+.dots li.now i{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.dots b{font:600 12.5px/1.2 var(--display);letter-spacing:.03em;color:var(--muted);white-space:nowrap;max-width:130px;overflow:hidden;text-overflow:ellipsis}
+.dots li.now b,.dots li.done b{color:var(--ink)}
+.dots button:hover b{color:var(--accent)}
+.wiz{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:0;min-height:440px}
+.wiz-view{padding:18px;border-right:1px solid var(--line)}
+.wiz-panel{padding:22px 22px 26px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.wiz-panel h3{font-size:22px}
+.wiz-panel .muted{font-size:14.5px}
+@media (max-width:820px){.wiz{grid-template-columns:minmax(0,1fr)}.wiz-view{border-right:0;border-bottom:1px solid var(--line)}}
+.measline{margin:10px 0 0;font-size:12.5px;color:var(--muted)}
+.mats.one{grid-template-columns:1fr}
+.mats.one .mat{grid-template-columns:40px 1fr auto;padding:9px 10px}
+.mats.one .mat .st{margin:0}
+.opt.big{padding:13px 14px}
+.opt.big b{font-size:16px}
+.actbar{position:sticky;bottom:0;z-index:15;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 18px calc(12px + env(safe-area-inset-bottom,0px));border-top:1.5px solid var(--ink);background:var(--panel)}
+.actsum{font:500 13px/1.3 var(--mono);color:var(--muted);text-align:center;flex:1;min-width:0}
+.actsum b{font-size:17px;color:var(--ink)}
+@media (max-width:520px){.actsum{font-size:11.5px}.actsum b{display:block}}
+.pricebox{border:1.5px solid var(--ink);padding:14px;display:flex;flex-direction:column;gap:10px;background:var(--surface)}
+.qtyrow2{display:grid;grid-template-columns:40px 1fr 40px;border:1px solid var(--ink)}
+.qtyrow2 button{border:0;background:var(--panel);font-size:20px;line-height:1}
+.qtyrow2 input{border:0;border-inline:1px solid var(--ink);background:var(--surface);text-align:center;font:600 18px/1 var(--mono);padding:9px 4px;width:100%}
+.bigprice{text-align:center}
+.bigprice b{font:600 36px/1 var(--mono);font-variant-numeric:tabular-nums}
+.bigprice span{font:500 14px/1 var(--mono);color:var(--muted);margin-left:4px}
+.pricebox .detailsbtn{align-self:center}
+.pricebox .ladder2 td:first-child{text-align:right;width:42%}
+.pricebox .ladder2 td:nth-child(3){color:var(--muted);font-size:12px}
+.subtotal{display:flex;justify-content:space-between;align-items:baseline;border-top:1.5px solid var(--ink);padding-top:10px}
+.subtotal span{font:600 11px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.subtotal b{font:600 22px/1 var(--mono)}
+.okline{font-size:14px;color:var(--go);margin:0}
+ul.reasons{margin:6px 0 0;padding-left:18px;font-size:14px}
 @media (prefers-reduced-motion: reduce){.scan{display:none}*{transition:none!important;animation:none!important}}
 </style>
 
@@ -676,7 +718,7 @@ const LOGO = `<svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"
 function nav(){
   const on = p => S.page === p ? 'on' : '';
   return `<header class="nav brushed"><button class="brand" data-go="home">${LOGO}<span>Height Automation<small>CNC machining · Grain Valley, MO</small></span></button>
-    <nav class="navlinks" aria-label="Site"><button class="${on('home')}" data-go="home">Home</button><button data-go="how">How it works</button><button data-go="materials">Materials</button><button class="cta" data-go="upload">Get a quote</button></nav></header>`;
+    <nav class="navlinks" aria-label="Site"><button class="${on('home')}" data-go="home">Home</button><button data-go="how">How it works</button><button class="cta" data-go="upload">Get a quote</button></nav></header>`;
 }
 function footer(){
   return `<footer class="foot brushed"><div><div class="plate-label">Height Automation</div><span>CNC machining in Grain Valley, Missouri.<br>Mon to Fri, 7 AM to 4 PM Central.</span></div>
@@ -699,7 +741,6 @@ function render(){
     case 'requested': body = requestedPage(); break;
   }
   site.innerHTML = nav() + body + footer();
-  document.body.classList.toggle('has-mbar', S.page === 'configure');
   bindBuyer();
 }
 function go(page, anchor){ S.page = page; if (page !== 'pay') stopHold(); render(); const t = anchor && document.getElementById(anchor); if (t) t.scrollIntoView({behavior: reduce ? 'auto' : 'smooth'}); else window.scrollTo({top:0, behavior: reduce ? 'auto' : 'smooth'}); }
@@ -725,7 +766,7 @@ function home(){
       <div class="stack">
         <span class="plate-label">Instant CNC quotes · reviewed by a machinist</span>
         <h1>Machined parts, priced while you watch.</h1>
-        <p class="lede">Drop a STEP or STL file. Simple parts in proven materials get a fixed price and a Pay button in seconds. Everything else gets a quote from our team within one business day.</p>
+        <p class="lede">Drop a STEP or STL file. Get a fixed price and a Pay button in seconds, or a quote from our team within a day.</p>
         <div class="facts"><div><b>±0.005 in</b> standard tolerance</div><div><b>7</b> business days standard</div><div><b>1</b> business day review</div></div>
       </div>
       <div>${heroSheet()}
@@ -740,14 +781,11 @@ function home(){
       <div class="examples">${['plate', 'housing', 'bracket'].map(exampleCard).join('')}</div></section>
     <section class="section" id="how"><div class="section-head"><div class="stack-s"><span class="label">How it works</span><h2>From file to finished part</h2></div></div>
       <div class="steps4">
-        <div><span class="n">01</span><h3>Upload</h3><p class="muted">Your browser measures the part on the spot: size, metal volume and holes. You can spin it around to check it's the right file.</p></div>
-        <div><span class="n">02</span><h3>Price or quote</h3><p class="muted">A fixed price and a Pay button, or a quote from our team when the part needs a person. You'll see exactly why.</p></div>
-        <div><span class="n">03</span><h3>Reviewed</h3><p class="muted">A machinist checks every paid order within one business day, before any metal is cut. If we can't make it as priced, you get a full refund.</p></div>
-        <div><span class="n">04</span><h3>Made and shipped</h3><p class="muted">Your ship date is set when you pay. If we run late, we tell you and you can cancel free.</p></div>
+        <div><span class="n">01</span><h3>Upload</h3><p class="muted">Drop your file. We measure it on the spot.</p></div>
+        <div><span class="n">02</span><h3>Get a price</h3><p class="muted">Pick a material and quantity. Simple parts get a fixed price; the rest, a quote within a day.</p></div>
+        <div><span class="n">03</span><h3>Checked and shipped</h3><p class="muted">A machinist reviews every order before cutting. Wrong price? Full refund.</p></div>
       </div></section>
-    <section class="section" id="materials"><div class="section-head"><div class="stack-s"><span class="label">Materials</span><h2>What prices instantly today</h2></div></div>
-      <div class="rules"><div class="stack-s"><div class="matrow">${mats}</div><p class="hint">A material gets instant prices once it's proven on our own past jobs. The rest are quoted by our team, usually the same day.</p></div>
-      <div class="stack-s"><h4>An instant price needs</h4><ul class="muted"><li>One solid part per file, closed and measurable</li><li>Standard tolerance (±0.005 in), no threads, no drawing notes</li><li>As-machined finish, up to 10 pieces, up to ${money(S.cap)}</li><li>A US shipping address</li></ul></div></div></section>`;
+`;
 }
 
 /* upload */
@@ -767,74 +805,76 @@ function uploadPage(){
     <div class="stack"><div class="stack-s"><span class="label">Or try a sample part</span><div class="mats" style="grid-template-columns:1fr">${cards}</div></div></div>
   </div></div>`;
 }
+const CSTEPS = ['size', 'material', 'options', 'price'];
 function stepperBar(i){
-  const p = S.part, names = ['File', 'Configure', 'Verify and pay', 'Review', 'Make and ship'];
-  const vals = [p ? p.file : 'Upload', p ? MATS[S.material].short + ' · ' + S.qty + ' pcs' : '', 'Email and terms', 'Within 1 business day', ''];
-  return `<div class="appbar"><ol class="stepper" aria-label="Quote steps">${names.map((n, k) => `<li class="${k < i ? 'done' : k === i ? 'now' : ''}"><b>${k + 1}. ${n}</b><span>${esc(vals[k] || ' ')}${k === 0 && i > 0 && i < 3 ? '<button class="repl" data-go="upload">replace</button>' : ''}</span></li>`).join('')}</ol></div>`;
+  const p = S.part, ev = p ? evaluate() : null;
+  const labels = ['Size', 'Material', 'Options', 'Price', 'Pay'];
+  const vals = [
+    p ? (p.dxf ? '2D drawing' : p.dims.slice(0, 2).map(d => d.toFixed(2)).join(' × ') + ' in') : 'Upload',
+    p ? MATS[S.material].short : '',
+    p ? (S.finish === 'none' && !Object.values(S.dec).some(Boolean) ? 'Standard' : 'Custom') : '',
+    ev && ev.pr ? S.qty + ' pcs · ' + money(ev.pr.total) : '',
+    ''
+  ];
+  const canJump = S.page === 'configure' || S.page === 'pay';
+  return `<div class="appbar"><ol class="dots" aria-label="Quote steps">${labels.map((n, k) => {
+    const st = k < i ? 'done' : k === i ? 'now' : '';
+    const jump = canJump && k < i && k < 4 && p;
+    return `<li class="${st}">${jump ? `<button data-jump="${k}" aria-label="Back to ${n}">` : '<span class="dotwrap">'}<i aria-hidden="true">${k < i ? '✓' : k + 1}</i><b>${k < i && vals[k] ? esc(vals[k]) : n}</b>${jump ? '</button>' : '</span>'}</li>`;
+  }).join('')}</ol></div>`;
 }
 
-/* configure */
+/* configure: one decision per step */
 function configure(){
   const p = S.part, ev = evaluate(), m = MATS[S.material];
-  const matCards = Object.entries(MATS).map(([k, mm]) => { const inst = mm.state === 'on' && !S.paused;
-    return `<button class="mat" data-mat="${k}" aria-pressed="${k === S.material}"><span class="sw" style="background:${mm.sw}"></span><span><b>${esc(mm.name)}</b><small>${esc(mm.desc)}</small><span class="st ${inst ? 'i' : 'q'}">${inst ? 'Instant price' : 'Quoted by our team'}</span></span></button>`; }).join('');
-  const ck = checks(p).map(c => `<li><span class="ck ${c.info ? 'i' : c.ok ? 'p' : 'f'}" aria-hidden="true">${c.info ? 'i' : c.ok ? '✓' : '!'}</span><span>${esc(c.t)}</span></li>`).join('');
-  const unitsBlock = p && p.unitsAsk ? `<div class="cfg-sec"><h4>Units <span class="tag">STL files don't store units</span></h4>
-      <div class="opts">${['in', 'mm'].map(u => `<label class="opt"><input type="radio" name="units" value="${u}" ${p.unitsConfirmed && p.units === u ? 'checked' : ''}><span><b>${u === 'in' ? 'Inches' : 'Millimeters'}</b><small class="mono">${p.raw.map(d => d.toFixed(u === 'in' ? 3 : 1)).join(' × ')} ${u}</small></span><span></span></label>`).join('')}</div></div>` : '';
-  const fin = Object.entries(FINISHES).map(([k, f]) => `<label class="opt"><input type="radio" name="finish" value="${k}" ${S.finish === k ? 'checked' : ''}><span><b>${esc(f.name)} ${f.s2 ? '<span class="tag s2">Stage 2</span>' : ''}</b><small>${esc(f.desc)}${f.s2 ? ' Quoted by our team for now.' : ''}</small>
-      ${k === 'anodize' && S.finish === 'anodize' ? `<span class="swatches">${Object.entries(f.colors).map(([c, hex]) => `<button type="button" data-color="${c}" aria-pressed="${S.color === c}" aria-label="${c}" title="${c}" style="background:#${hex.toString(16).padStart(6, '0')}"></button>`).join('')}</span>` : ''}</span><span class="price-d">${k === 'none' ? 'included' : 'team quote'}</span></label>`).join('');
-  const pStd = p && !p.dxf ? priceAt(p, S.material, S.qty, 'standard') : null, pRush = p && !p.dxf ? priceAt(p, S.material, S.qty, 'rush') : null;
-  const lead = `<div class="opts">
-      <label class="opt"><input type="radio" name="lead" value="standard" ${S.lead === 'standard' ? 'checked' : ''}><span><b>Standard</b><small>Ships by ${fmtDate(shipDate('standard'))}</small></span><span class="price-d">${pStd ? money(pStd.total) : ''}</span></label>
-      <label class="opt"><input type="radio" name="lead" value="rush" ${S.lead === 'rush' ? 'checked' : ''}><span><b>Rush <span class="tag">optional add-on</span></b><small>Ships by ${fmtDate(shipDate('rush'))}. Moves your part to the front of the line.</small></span><span class="price-d">${pRush ? '+' + S.rushPct + '%' : ''}</span></label></div>`;
-  return `${stepperBar(1)}<div class="app">
-    <div class="col c-view">${p && !p.dxf ? viewerHTML('bv', p) : `<div class="viewer"><div class="vempty"><div class="stack-s"><h3>2D drawing</h3><p>${esc(p ? p.file : '')}</p><p class="hint">Drawings can't be measured automatically, so our team quotes them.</p></div></div></div>`}
-      ${p && !p.dxf ? `<dl class="measure"><div><dt>Part</dt><dd>${esc(p.title)}</dd></div><div><dt>Material</dt><dd>${esc(m.short)}</dd></div><div><dt>Finish</dt><dd>${esc(FINISHES[S.finish].name)}${S.finish === 'anodize' ? ', ' + S.color : ''}</dd></div><div><dt>Qty</dt><dd>${S.qty}</dd></div><div><dt>Size (in)</dt><dd>${p.dims.map(d => d.toFixed(3)).join(' × ')}</dd></div><div><dt>Size (mm)</dt><dd>${p.dims.map(d => (d * 25.4).toFixed(1)).join(' × ')}</dd></div><div><dt>Metal volume</dt><dd>${p.vol.toFixed(2)} in³</dd></div><div><dt>Through-holes</dt><dd>${p.holes}</dd></div><div><dt>Weight</dt><dd>${(p.vol * m.density).toFixed(2)} lb</dd></div><div><dt>Triangles</dt><dd>${(p.triCount || 0).toLocaleString()}</dd></div></dl>
-      <p class="hint" style="margin-top:8px">Measured in your browser. Our server checks the numbers again before it prices anything.</p>` : ''}
-    </div>
-    <div class="col c-config">
-      ${unitsBlock}
-      <div class="cfg-sec"><h4>Material</h4><div class="mats">${matCards}</div></div>
-      <div class="cfg-sec"><h4>Requirements</h4><div class="stack-s">
-        <p class="hint">Standard: ±0.005 in on all features, 0.010 in edge break, no threads modeled.</p>
-        ${[['tight', 'Tighter tolerance than ±0.005 in'], ['threads', 'Tapped holes <span class="tag s2">Stage 2: pick a thread for each hole size</span>'], ['drawing', 'I have a drawing with notes'], ['own', 'Make it from material I supply']].map(([k, t]) => `<label class="check"><input type="checkbox" data-dec="${k}" ${S.dec[k] ? 'checked' : ''}><span>${t}</span></label>`).join('')}
-      </div></div>
-      <div class="cfg-sec"><h4>Finish</h4><div class="opts">${fin}</div></div>
-      <div class="cfg-sec"><h4>Lead time</h4>${lead}</div>
-      ${p && !p.dxf ? `<div class="cfg-sec"><h4>Manufacturability checks</h4><ul class="checks">${ck}</ul></div>` : ''}
-    </div>
-    <div class="col c-price">${pricePanel(ev)}</div>
+  if (p.dxf && S.cstep === 'size') S.cstep = 'material';
+  const idx = CSTEPS.indexOf(S.cstep);
+  let panel = '';
+  if (S.cstep === 'size'){
+    const ask = p.unitsAsk;
+    panel = `<h3>Confirm your part</h3>
+      ${ask ? `<p class="muted">STL files don't store units. Which is right?</p>
+        <div class="opts">${['in', 'mm'].map(u => `<label class="opt big"><input type="radio" name="units" value="${u}" ${p.unitsConfirmed && p.units === u ? 'checked' : ''}><span><b>${u === 'in' ? 'Inches' : 'Millimeters'}</b><small class="mono">${p.raw.map(d => d.toFixed(u === 'in' ? 3 : 1)).join(' × ')} ${u}</small></span><span></span></label>`).join('')}</div>`
+      : `<p class="muted">We measured it in your browser.</p>`}
+      <dl class="kv" style="margin-top:4px"><dt>Size</dt><dd>${p.dims.map(d => d.toFixed(3)).join(' × ')} in</dd><dt>Metal</dt><dd>${p.vol.toFixed(2)} in³</dd><dt>Holes</dt><dd>${p.holes}</dd><dt>Parts in file</dt><dd>${p.bodies}</dd></dl>`;
+  } else if (S.cstep === 'material'){
+    panel = `<h3>Choose a material</h3><div class="mats one">${Object.entries(MATS).map(([k, mm]) => { const inst = mm.state === 'on' && !S.paused;
+      return `<button class="mat" data-mat="${k}" aria-pressed="${k === S.material}"><span class="sw" style="background:${mm.sw}"></span><span><b>${esc(mm.name)}</b><small>${esc(mm.desc)}</small></span><span class="st ${inst ? 'i' : 'q'}">${inst ? 'Instant' : 'Team quote'}</span></button>`; }).join('')}</div>`;
+  } else if (S.cstep === 'options'){
+    const fin = Object.entries(FINISHES).map(([k, f]) => `<label class="opt"><input type="radio" name="finish" value="${k}" ${S.finish === k ? 'checked' : ''}><span><b>${esc(f.name)}${k === 'none' ? ' <span class="tag">fastest</span>' : ''}</b>${k === 'anodize' && S.finish === 'anodize' ? `<span class="swatches">${Object.entries(f.colors).map(([c, hex]) => `<button type="button" data-color="${c}" aria-pressed="${S.color === c}" aria-label="${c}" title="${c}" style="background:#${hex.toString(16).padStart(6, '0')}"></button>`).join('')}</span>` : ''}</span><span class="price-d">${k === 'none' ? 'included' : 'team quote'}</span></label>`).join('');
+    panel = `<h3>Anything special?</h3><p class="muted">Standard is ±0.005 in, edges broken, no threads. Leave these off for an instant price.</p>
+      <div class="opts">${[['threads', 'Tapped holes'], ['tight', 'Tighter tolerance'], ['drawing', 'Drawing with notes'], ['own', 'My own material']].map(([k, t]) => `<label class="opt"><input type="checkbox" data-dec="${k}" ${S.dec[k] ? 'checked' : ''}><span><b>${t}</b></span><span class="price-d">team quote</span></label>`).join('')}</div>
+      <h4 style="margin-top:6px">Finish</h4><div class="opts">${fin}</div>`;
+  } else {
+    const pr = ev.pr;
+    const ladder = p.dxf ? '' : [5, 10, 25, 50].map(q => { const x = priceAt(p, S.material, q, S.lead); const inst = q <= S.maxQty && x.total <= S.cap;
+      return `<tr class="${q === S.qty ? 'cur' : ''}" data-q="${q}"><td>${q} =</td><td>${money(x.unit)}/ea</td><td class="hint">${inst ? '' : 'team'}</td></tr>`; }).join('');
+    panel = `<div class="pricebox">
+        <div class="qtyrow2"><button id="qMinus" aria-label="Fewer">−</button><input id="qty" type="text" inputmode="numeric" value="${S.qty}" aria-label="Quantity"><button id="qPlus" aria-label="More">+</button></div>
+        ${pr ? `<div class="bigprice"><b>${money(pr.unit)}</b><span>/ea</span></div>
+        <button class="detailsbtn" id="details" aria-expanded="${S.detailsOpen}">${S.detailsOpen ? 'Hide details ▴' : 'View details ▾'}</button>
+        ${S.detailsOpen ? `<table class="lines"><tr><td>Part: material and machining</td><td>${money(pr.each * S.qty)}</td></tr><tr><td>Setup, shared across ${S.qty}</td><td>${money(pr.setup)}</td></tr>${pr.rush ? `<tr><td>Rush</td><td>${money(pr.rush)}</td></tr>` : ''}${pr.minAdj ? `<tr><td>Order minimum</td><td>${money(pr.minAdj)}</td></tr>` : ''}</table>` : ''}
+        <table class="ladder2">${ladder}</table>
+        <div class="subtotal"><span>Subtotal</span><b>${money(pr.total)}</b></div>` : '<p class="muted">Drawings are priced by our team.</p>'}
+      </div>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="lead" value="standard" ${S.lead === 'standard' ? 'checked' : ''}><span><b>Standard</b><small>Ships by ${fmtDate(shipDate('standard'))}</small></span><span></span></label>
+        <label class="opt"><input type="radio" name="lead" value="rush" ${S.lead === 'rush' ? 'checked' : ''}><span><b>Rush</b><small>Ships by ${fmtDate(shipDate('rush'))}</small></span><span class="price-d">+${S.rushPct}%</span></label>
+      </div>
+      ${ev.instant ? `<p class="okline">✓ Instant price. A machinist reviews it before production.</p>`
+        : `<div class="notice info"><b>Our team will quote this within 1 business day.</b><ul class="reasons">${ev.reasons.map(r => `<li>${esc(r)}</li>`).join('')}</ul></div>`}`;
+  }
+  const next = S.cstep === 'size' ? `<button class="btn" data-next ${p.unitsAsk && !p.unitsConfirmed ? 'disabled' : ''}>Next</button>`
+    : S.cstep === 'price' ? (ev.instant ? `<button class="btn" id="toPay">Continue to pay</button>` : `<button class="btn" id="sendReq">Request a quote</button>`)
+    : `<button class="btn" data-next>Next</button>`;
+  const back = idx <= (p.dxf ? 1 : 0) ? `<button class="btn ghost" data-go="upload">Replace file</button>` : `<button class="btn ghost" data-back>Back</button>`;
+  const sum = ev.pr && idx >= 1 ? `<span class="actsum"><b>${money(ev.pr.unit)}</b>/ea · ${S.qty} pcs · ships ${fmtDate(shipDate(S.lead))}</span>` : '<span class="actsum"></span>';
+  return `${stepperBar(idx)}<div class="wiz">
+    <div class="wiz-view">${p.dxf ? `<div class="viewer grid-paper"><div class="vempty"><div class="stack-s"><h3>2D drawing</h3><p class="mono">${esc(p.file)}</p><p class="hint">Drawings are quoted by our team.</p></div></div></div>` : viewerHTML('bv', p)}
+      ${p.dxf ? '' : `<p class="measline mono">${p.dims.map(d => d.toFixed(3)).join(' × ')} in · ${p.vol.toFixed(2)} in³ · ${p.holes} hole${p.holes === 1 ? '' : 's'} · ${(p.vol * m.density).toFixed(2)} lb</p>`}</div>
+    <div class="wiz-panel">${panel}</div>
   </div>
-  ${ev.pr || ev.reasons.length ? `<div class="mbar"><div>${ev.pr ? `<b>${money(ev.pr.unit)}</b><small>per part · ${money(ev.pr.total)} for ${S.qty}</small>` : '<b>Team quote</b><small>within 1 business day</small>'}</div><button class="btn" data-mbar>${ev.instant ? 'Continue' : 'Request quote'}</button></div>` : ''}`;
-}
-function pricePanel(ev){
-  const p = S.part;
-  if (!p) return '';
-  const pr = ev.pr;
-  const ladder = p.dxf ? '' : [1, 5, 10, 25, 50].map(q => { const x = priceAt(p, S.material, q, S.lead), one = priceAt(p, S.material, 1, S.lead).unit; const inst = q <= S.maxQty && x.total <= S.cap;
-      return `<tr class="${q === S.qty ? 'cur' : ''}" data-q="${q}"><td>${q}</td><td>${money(x.unit)}/ea${x.minAdj ? '<br><span class="hint" style="font-size:11px">order minimum</span>' : ''}</td><td>${q === 1 ? '' : '−' + Math.round((1 - x.unit / one) * 100) + '%'}</td><td class="hint" style="font-size:12px">${inst ? '' : 'team'}</td></tr>`; }).join('');
-  const details = pr ? `<table class="lines">
-      <tr><td>Part: material and machining<br><span class="hint">${S.qty} × ${money(pr.each)}</span></td><td>${money(pr.each * S.qty)}</td></tr>
-      <tr><td>Setup, shared across ${S.qty} ${S.qty === 1 ? 'part' : 'parts'}</td><td>${money(pr.setup)}</td></tr>
-      ${pr.rush ? `<tr><td>Rush, +${S.rushPct}%</td><td>${money(pr.rush)}</td></tr>` : ''}
-      ${pr.minAdj ? `<tr><td>Raised to the ${money(S.minOrder)} order minimum</td><td>${money(pr.minAdj)}</td></tr>` : ''}
-      <tr><td>Finish: ${esc(FINISHES[S.finish].name)}</td><td>${S.finish === 'none' ? 'included' : 'team quote'}</td></tr>
-      <tr class="total"><td>Subtotal</td><td>${money(pr.total)}</td></tr></table>` : '';
-  const status = ev.instant
-    ? `<div class="status"><span class="pill go">Instant price · pay now</span><p class="hint">Plus tax and shipping at checkout. A machinist reviews it before production.</p><button class="btn block" id="toPay">Continue to pay</button></div>`
-    : `<div class="status"><span class="pill practice">Quoted by our team · 1 business day</span><ul>${ev.reasons.map(r => `<li>${esc(r)}</li>`).join('')}</ul>${pr ? '<p class="hint">The price above is an estimate. Our team will send a firm price and a pay link.</p>' : ''}<button class="btn block" id="sendReq">Request a quote</button></div>`;
-  return `<aside class="pp" aria-label="Price">
-    <div class="pp-top brushed"><span class="plate-label">${ev.instant ? 'Price per part' : 'Estimate per part'}</span>
-      <div class="readout">${pr ? money(pr.unit) : '—'} <small>/ea</small></div>
-      <div class="qtyrow"><button id="qMinus" aria-label="Fewer">−</button><input id="qty" type="text" inputmode="numeric" value="${S.qty}" aria-label="Quantity"><button id="qPlus" aria-label="More">+</button></div></div>
-    <div class="pp-body">
-      ${pr ? `<div class="row between"><span class="label">Subtotal</span><b class="mono" style="font-size:20px">${money(pr.total)}</b></div>
-      <button class="detailsbtn" id="details" aria-expanded="${S.detailsOpen}">${S.detailsOpen ? 'Hide details' : 'View details'}</button>${S.detailsOpen ? details : ''}
-      <div class="stack-s"><span class="label">Price breaks</span><table class="ladder2">${ladder}</table></div>` : ''}
-      ${status}
-    </div>
-    <div class="ship"><span>Ships by</span><b>${fmtDate(shipDate(S.lead))}</b></div>
-  </aside>`;
+  <div class="actbar">${back}${sum}${next}</div>`;
 }
 
 /* verify and pay */
@@ -852,7 +892,7 @@ function payPage(){
   if (S.payState === 'idle') pay = `<button class="btn block" id="pay" ${ready && S.terms ? '' : 'disabled'}>Pay now</button>`;
   else if (S.payState === 'working') pay = '<button class="btn block" disabled>Getting your order ready…</button>';
   else pay = '<button class="btn block" id="toCheckout">Continue to secure checkout →</button>';
-  return `${stepperBar(2)}<div class="page"><div class="twocol">
+  return `${stepperBar(4)}<div class="page"><div class="twocol">
     <div class="stack"><div class="card sunk">${partSummary()}</div>
       <div class="card stack-s"><h3>Before you pay</h3><ul class="terms"><li>This price is fixed for this file, material, quantity, finish and lead time.</li><li>A machinist reviews every order within 1 business day. If we can't make it as priced, we cancel and refund in full.</li><li>If we run late, we tell you and you can cancel free.</li><li>Once your part is in production it can't be cancelled.</li></ul>
       <p class="hint">Price held for <b class="mono" id="hold">${Math.floor(S.hold / 60)}:${String(S.hold % 60).padStart(2, '0')}</b>. After you click Pay, you have 24 hours to finish checkout.</p></div>
@@ -879,7 +919,7 @@ function checkoutPage(){
 }
 function donePage(){
   const o = S.orders[S.orders.length - 1], due = fmtDate(o.due), ship = fmtDate(o.ship);
-  return `${stepperBar(3)}<div class="page"><div class="stack" style="max-width:820px">
+  return `${stepperBar(5)}<div class="page"><div class="stack" style="max-width:820px">
     <div class="notice go">Paid. Order #${o.id} is in review.</div><h2>A machinist will check your order by ${due}.</h2>
     <ol class="tl"><li class="done"><b>Paid</b><br><span class="hint">today</span></li><li class="now"><b>Review</b><br><span class="hint">by ${due}</span></li><li><b>Production</b><br><span class="hint">after review</span></li><li><b>Shipped</b><br><span class="hint">by ${ship}</span></li></ol>
     <div class="email"><header>From: Height Automation · Order #${o.id} received, in review</header><div><p>Thanks for your order: ${o.qty} × ${esc(o.part)} in ${esc(MATS[o.material].short)}, ${money(o.total)} plus tax and shipping.</p><p>A machinist checks every order within one business day, before any metal is cut. If we can't make it as priced, we'll cancel and refund you in full. Expected ship date: ${ship}.</p></div></div>
@@ -887,7 +927,7 @@ function donePage(){
 }
 function requestedPage(){
   const h = S.hand[S.hand.length - 1];
-  return `${stepperBar(2)}<div class="page"><div class="stack" style="max-width:760px"><div class="notice info">Request ${h.id} sent.</div><h2>We'll email your quote within 1 business day.</h2>
+  return `${stepperBar(4)}<div class="page"><div class="stack" style="max-width:760px"><div class="notice info">Request ${h.id} sent.</div><h2>We'll email your quote within 1 business day.</h2>
     <div class="card sunk">${partSummary()}</div>
     <div class="email"><header>From: Height Automation · We got your quote request ${h.id}</header><div><p>Thanks for sending ${esc(S.part.file)}. Our team is pricing it now. You'll get a price and a pay link by email within one business day.</p><p class="hint">Nothing is charged until you pay that link.</p></div></div>
     <div class="row"><button class="btn" id="seeShopH">See it in the shop view →</button><button class="btn ghost" data-go="upload">Start another quote</button></div></div></div>`;
@@ -897,7 +937,7 @@ function requestedPage(){
 function usePart(p){
   S.part = p; S.material = p.material || 'al6061'; S.finish = 'none'; S.lead = 'standard'; S.qty = p.dxf ? 1 : 10; S.detailsOpen = false;
   S.dec = {tight:false, threads:!!p.threads, drawing:false, own:false}; S.payState = 'idle'; S.terms = false; S.uploadMsg = ''; S.uploadInfo = '';
-  buyerViewer.partId = null; S.scan = !p.dxf && !reduce;
+  buyerViewer.partId = null; S.scan = !p.dxf && !reduce; S.cstep = p.dxf ? 'material' : 'size';
   go('configure');
 }
 function takeFile(file){
@@ -947,7 +987,9 @@ function bindBuyer(){
   if (S.page === 'configure'){
     if (S.part && !S.part.dxf){ bindViewer('bv', buyerViewer); buyerViewer.setPart(S.part); buyerViewer.setLook(...lookFor());
       if (S.scan){ S.scan = false; const bv = $('#bv'); const sc = document.createElement('div'); sc.className = 'scan'; bv.appendChild(sc); setTimeout(() => sc.remove(), 1200); } }
-    $$('[data-mat]').forEach(b => b.onclick = () => { S.material = b.dataset.mat; if (S.finish === 'anodize' && !S.material.startsWith('al')) S.finish = 'none'; render(); });
+    $$('[data-mat]').forEach(b => b.onclick = () => { S.material = b.dataset.mat; if (S.finish === 'anodize' && !S.material.startsWith('al')) S.finish = 'none'; S.cstep = 'options'; render(); });
+    const nx = document.querySelector('[data-next]'); if (nx) nx.onclick = () => { S.cstep = CSTEPS[Math.min(3, CSTEPS.indexOf(S.cstep) + 1)]; render(); };
+    const bk = document.querySelector('[data-back]'); if (bk) bk.onclick = () => { S.cstep = CSTEPS[Math.max(S.part.dxf ? 1 : 0, CSTEPS.indexOf(S.cstep) - 1)]; render(); };
     $$('[data-dec]').forEach(c => c.onchange = () => { S.dec[c.dataset.dec] = c.checked; render(); });
     $$('input[name="finish"]').forEach(r => r.onchange = () => { S.finish = r.value; render(); });
     $$('[data-color]').forEach(b => b.onclick = e => { e.preventDefault(); S.color = b.dataset.color; render(); });
@@ -959,9 +1001,9 @@ function bindBuyer(){
     const qp = $('#qPlus'); if (qp) qp.onclick = () => setQ(S.qty + 1);
     const qi = $('#qty'); if (qi) qi.onchange = () => setQ(parseInt(qi.value, 10));
     const d = $('#details'); if (d) d.onclick = () => { S.detailsOpen = !S.detailsOpen; render(); };
-    const mb = document.querySelector('[data-mbar]'); if (mb) mb.onclick = () => { const b = $('#toPay') || $('#sendReq'); if (b) b.click(); };
     const tp = $('#toPay'); if (tp) tp.onclick = () => { S.snap = buyerViewer.snapshot(); S.payState = 'idle'; S.terms = false; S.hold = 900; go('pay'); startHold(); };
   }
+  $$('[data-jump]').forEach(b => b.onclick = () => { S.cstep = CSTEPS[+b.dataset.jump]; go('configure'); });
   const sr = $('#sendReq'); if (sr) sr.onclick = () => { if (S.page === 'configure') S.snap = buyerViewer.snapshot(); sendRequest(); };
   if (S.page === 'pay'){
     const em = $('#email'); if (em) em.oninput = () => { S.email = em.value; };
